@@ -50,23 +50,62 @@ const getUsername = async (token) => {
     }
 }
 
+const getCoins = async (username) => {
+    const sql = "SELECT coins FROM user WHERE username = ?"
+    return database.query(sql, username)
+}
+
+const setCoins = async (username, coins) => {
+    const sql = "UPDATE user SET coins = ? WHERE username = ?"
+    return database.query(sql, [coins, username])
+}
+
 const getUserID = async (username) => {
     const sql = "SELECT id FROM user WHERE username = ?"
     return database.query(sql, [username])
 }
 
-const buyMeme = async (memeID, userID, quantita) => {
+const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
     try {
-        const valoreMeme = (await getMemeValue(memeID))[0].score
+        let sql = "SELECT COUNT(*) AS Quanti FROM investment WHERE id_meme = ? AND id_utente = ?"
 
-        console.log("VALORE MEME", valoreMeme);
-        sql = "INSERT INTO investment (id_meme, id_utente, quantita, valore_meme) VALUES (?, ?, ?, ?)"
-
-        values = [memeID, userID, quantita, valoreMeme]
-        return database.query(sql, values)
+        const result = (await database.query(sql, [memeID, userID]))[0].Quanti
+        if(result === 0) {
+            sql = "INSERT INTO investment (id_meme, id_utente, quantita, valore_meme) VALUES (?, ?, ?, ?)"
+            const values = [memeID, userID, quantita, valoreMeme]
+            return database.query(sql, values)
+        } else {
+            sql = "UPDATE investment SET quantita = ? WHERE id_meme = ? AND id_utente = ?"
+            return database.query(sql, [result + quantita, memeID, userID])
+        }
     } catch (error) {
         console.error(error);
     }
+}
+
+const sellMeme = async (memeID, userID, quantita) => {
+    let sql = "SELECT quantita FROM investment WHERE id_meme = ? AND id_utente = ?"
+    return database.query(sql, [memeID, userID])
+    .then(result => {
+        console.log("Quantità di meme trovata", result);
+        const q = result[0].quantita
+        let values = []
+        if(quantita > q) {
+            throw new Error("Non hai abbastanza azioni")
+        } else if (q == quantita) {
+            // Se vendo tutto cancello
+            sql = "DELETE FROM investment WHERE id_meme = ? AND id_utente = ?"
+            values = [memeID, userID]
+        } else {
+            // Vado a sottrarre la quantita
+            sql = "UPDATE investment SET quantita = ? WHERE id_meme = ? AND id_utente = ?"
+            values = [q-quantita,memeID, userID]
+        }
+        database.query(sql, values)
+    })
+    .catch(err => {
+        throw err
+    })
 }
 
 // Sappiamo che il token c'è ed è valido perchè avviene un controllo prima nel middleware AUTH
@@ -141,11 +180,26 @@ app.post("/memes/:id", async (req, res) => {
         }
         
         userID = userID[0].id
+
+        const valoreMeme = (await getMemeValue(id))[0].score
+
+        const userCoins = (await getCoins(username))[0].coins
         
         if(action === "buy") {
-            buyMeme(id, userID, quantity)
+            if(userCoins < valoreMeme * quantity) {
+                res.send({
+                    "message": "not enough coins"
+                })
+                return
+            }
+            await buyMeme(id, valoreMeme, userID, quantity)
+
+            await setCoins(username, userCoins - (valoreMeme * quantity))
         } else if (action === "sell") {
-            sellMeme(id, userID, quantity)
+            await sellMeme(id, valoreMeme, userID, quantity)
+            console.log("Valore investimento", valoreMeme * quantity);
+            
+            await setCoins(username, userCoins + (valoreMeme * quantity))
         }
         res.send({
             "message": "si, tutto a posto!"
