@@ -74,14 +74,16 @@ const getMemes = async () => {
 
 // Ogni 30 minuti
 // '0 0/30 * 1/1 * ? *'
-
+// Ogni 15 minuti
+// */15 * * * *
 // Ogni ora
-var job = new CronJob('0 * * * *', getMemes, null, true, "Europe/Berlin")
+// 0 * * * *
+var job = new CronJob('* * * * *', getMemes, null, true, "Europe/Berlin")
 
-getMemes()
+//getMemes()
 
 
 
 
-//job.start();
+job.start();
 
