@@ -2,7 +2,6 @@ const express = require("express")
 const mysql = require("promise-mysql")
 require('dotenv').config()
 const fetch = require("node-fetch")
-const e = require("express")
 
 const AUTH_URL = "https://auth-go.rover.acoradi.xyz/api/v1"
 
