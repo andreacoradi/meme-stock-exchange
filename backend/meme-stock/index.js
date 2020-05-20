@@ -23,9 +23,11 @@ mysql.createConnection({
     throw err
 })
 
-const getMemes = async () => {
-    let sql = "SELECT * FROM memes"
-
+const getMemes = async (count) => {
+    let sql = "SELECT name, title, url, subreddit, score, archived, created_at FROM memes ORDER BY created_at"
+    if(count) {
+        sql += ` LIMIT ${count}` 
+    }
     return database.query(sql)
 }
 
@@ -85,9 +87,13 @@ const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
 
 const sellMeme = async (memeID, userID, quantita) => {
     let sql = "SELECT quantita FROM investment WHERE id_meme = ? AND id_utente = ?"
+    console.log(memeID, userID);
     return database.query(sql, [memeID, userID])
     .then(result => {
         console.log("Quantità di meme trovata", result);
+        if(!result) {
+            throw new Error("questo meme non esiste")
+        }
         const q = result[0].quantita
         let values = []
         if(quantita > q) {
@@ -145,10 +151,11 @@ app.use(async (req, res, next) => {
 
 app.get("/memes", async (req, res) => {
     try {
-        let memes = await getMemes()
+        const count = req.query.count
+        const memes = await getMemes(count)
         res.send(memes)
     } catch (error) {
-        throw err
+        throw error
     }
 })
 
@@ -169,7 +176,7 @@ app.post("/memes/:id", async (req, res) => {
 
     try {
         const username = await getUsername(token)
-        // TODO fallo in una linea sola tenendolo const
+        
         let userID = await getUserID(username)
         
         if(userID.length === 0) {
@@ -187,16 +194,13 @@ app.post("/memes/:id", async (req, res) => {
         
         if(action === "buy") {
             if(userCoins < valoreMeme * quantity) {
-                res.send({
-                    "message": "not enough coins"
-                })
-                return
+                throw new Error("not enough coins")
             }
             await buyMeme(id, valoreMeme, userID, quantity)
 
             await setCoins(username, userCoins - (valoreMeme * quantity))
         } else if (action === "sell") {
-            await sellMeme(id, valoreMeme, userID, quantity)
+            await sellMeme(id, userID, quantity)
             console.log("Valore investimento", valoreMeme * quantity);
             
             await setCoins(username, userCoins + (valoreMeme * quantity))
@@ -205,7 +209,11 @@ app.post("/memes/:id", async (req, res) => {
             "message": "si, tutto a posto!"
         })
     } catch (error) {
-        throw error
+        console.error(error);
+        res.statusCode = 400
+        res.send({
+            "message": error.message
+        })
     }
 
 
