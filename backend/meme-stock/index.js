@@ -69,6 +69,41 @@ const buyMeme = async (memeID, userID, quantita) => {
     }
 }
 
+// Sappiamo che il token c'è ed è valido perchè avviene un controllo prima nel middleware AUTH
+const getToken = (req) => {
+    const auth = req.headers["authorization"]
+    const token = auth.split(" ")[1]
+    return token
+}
+
+// AUTH
+app.use(async (req, res, next) => {
+    const auth = req.headers["authorization"]
+    if(!auth) {
+        res.status(400)
+        res.send("no vecio, ma l'auth?")
+        return
+    }
+    const token = auth.split(" ")[1]
+
+    const result = await fetch(`${AUTH_URL}/auth`, {
+        headers: {
+            "Authorization": "Bearer " + token
+        }
+    })
+    const json = await result.json()
+
+    if(json.ok) {
+        next()
+    } else {
+        res.status(403)
+        res.send({
+            "message": "token not valid"
+        })
+        return
+    }
+})
+
 app.get("/memes", async (req, res) => {
     try {
         let memes = await getMemes()
@@ -81,13 +116,8 @@ app.get("/memes", async (req, res) => {
 app.post("/memes/:id", async (req, res) => {
     console.log(req.params.id);
     const id = req.params.id
-    const auth = req.headers["authorization"]
-    if(!auth) {
-        res.status(400)
-        res.send("no vecio, ma l'auth?")
-        return
-    }
-    const token = auth.split(" ")[1]
+    
+    const token = getToken(req)
 
     const { action, quantity } = req.body
     console.log(token);
@@ -100,16 +130,18 @@ app.post("/memes/:id", async (req, res) => {
 
     try {
         const username = await getUsername(token)
+        // TODO fallo in una linea sola tenendolo const
         let userID = await getUserID(username)
-        userID = userID[0].id
-
+        
         if(userID.length === 0) {
             res.send({
                 "message": "no user found"
             })
             return
         }
-
+        
+        userID = userID[0].id
+        
         if(action === "buy") {
             buyMeme(id, userID, quantity)
         } else if (action === "sell") {
