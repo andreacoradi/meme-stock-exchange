@@ -21,9 +21,9 @@ let memes = []
 
 
 const insertMeme = (m) => {
-    let sql = "INSERT INTO memes (name, title, url, score, subreddit, archived) VALUES (?)";
+    let sql = "INSERT INTO memes (name, title, url, score, subreddit, archived, created_at) VALUES (?)";
 
-    let values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived]
+    let values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived, m.created_utc]
     con.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("inserisco", m.name);
@@ -66,7 +66,7 @@ const getMemes = async () => {
     let r = await fetch("https://www.reddit.com/r/dankmemes/new.json");
     let json = await r.json()
     memes = json.data.children
-    
+    // console.log(memes);
     memes.forEach(m => {
         checkIfUnique(m.data)
     })
