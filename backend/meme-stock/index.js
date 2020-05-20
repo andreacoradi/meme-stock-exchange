@@ -2,6 +2,7 @@ const express = require("express")
 const mysql = require("promise-mysql")
 require('dotenv').config()
 const fetch = require("node-fetch")
+const e = require("express")
 
 const AUTH_URL = "https://auth-go.rover.acoradi.xyz/api/v1"
 
@@ -24,11 +25,16 @@ mysql.createConnection({
 })
 
 const getMemes = async (count) => {
-    let sql = "SELECT name, title, url, subreddit, score, archived, created_at FROM memes ORDER BY created_at"
+    let sql = "SELECT name, title, url, subreddit, score, archived, created_at FROM memes ORDER BY created_at DESC "
     if(count) {
         sql += ` LIMIT ${count}` 
     }
     return database.query(sql)
+}
+
+const getMeme = async (memeID) => {
+    const sql = "SELECT name, title, url, subreddit, score, archived, created_at FROM memes WHERE name = ?"
+    return database.query(sql, [memeID])
 }
 
 const getMemeValue = async (memeID) => {
@@ -159,6 +165,16 @@ app.get("/memes", async (req, res) => {
     }
 })
 
+app.get("/memes/:id", async (req, res) => {
+    try {
+        const memeID = req.params.id
+        const meme = await getMeme(memeID)
+        res.send(meme)
+    } catch (error) {
+        throw error
+    }
+})
+
 app.post("/memes/:id", async (req, res) => {
     console.log(req.params.id);
     const id = req.params.id
@@ -215,9 +231,6 @@ app.post("/memes/:id", async (req, res) => {
             "message": error.message
         })
     }
-
-
-
 })
 
 app.listen(1337)
