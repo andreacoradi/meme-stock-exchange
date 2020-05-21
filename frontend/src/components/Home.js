@@ -1,5 +1,6 @@
 import React from "react"
-import MaterialCard from "./MaterialCard"
+// import MaterialCard from "./MaterialCard"
+import { MemeList } from "./MemeList"
 import { Searchbar } from "./Searchbar"
 
 export const Home = () => {
@@ -9,7 +10,7 @@ export const Home = () => {
         <Searchbar />
       </div>
       <div className="p-1">
-        <MaterialCard />
+        <MemeList />
       </div>
     </div>
   )

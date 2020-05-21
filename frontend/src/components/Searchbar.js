@@ -1,5 +1,5 @@
 import React from "react"
-import { MDBCol, MDBIcon, MDBFormInline } from "mdbreact"
+import { MDBIcon, MDBFormInline } from "mdbreact"
 
 export const Searchbar = () => {
   return (

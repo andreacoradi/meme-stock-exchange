@@ -6,7 +6,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
+  // Redirect,
 } from "react-router-dom"
 
 import { Home } from "./components/Home"

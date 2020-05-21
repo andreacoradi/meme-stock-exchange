@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import {
   MDBCard,
-  MDBCardTitle,
-  MDBCardText,
+  // MDBCardTitle,
+  // MDBCardText,
   MDBCardBody,
   MDBCollapseHeader,
   MDBContainer,
@@ -13,11 +13,13 @@ import {
 } from "mdbreact"
 
 import { Image } from "react-bootstrap"
-import meme from "../assets/meme.jpeg"
 
-class Materialcard extends Component {
-  state = {
-    collapseID: "collapse1",
+export class Materialcard extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      collapseID: "collapse1",
+    }
   }
 
   toggleCollapse = (collapseID) => () =>
@@ -30,7 +32,6 @@ class Materialcard extends Component {
       <MDBContainer className="accordion md-accordion accordion-5">
         <MDBCard className="mb-4">
           <MDBCollapseHeader
-            // put meme pic here
             onClick={this.toggleCollapse("collapse1")}
             className="p-0 z-depth-1"
             tag="h4"
@@ -40,13 +41,17 @@ class Materialcard extends Component {
               className="d-flex flex-column justify-content-center align-items-center mr-4"
               style={{ backgroundColor: "#fff", minWidth: "100px" }}
             >
-              <Image src={meme} thumbnail="true" style={{ height: "8em" }} />
+              <Image
+                src={this.props.meme.url}
+                thumbnail="true"
+                style={{ height: "8em" }}
+              />
             </div>
 
             <div className="d-flex justify-content-end">
               <div className="p-2 col-example text-left">
-                <p>Meme #1</p>
-                <p>$230</p>
+                <p>{this.props.meme.title}</p>
+                <p>{this.props.meme.score}</p>
               </div>
               <div className="p-2 col-example text-left">
                 <MDBBtn color="success">
@@ -73,5 +78,3 @@ class Materialcard extends Component {
     )
   }
 }
-
-export default Materialcard
