@@ -128,6 +128,16 @@ const getToken = (req) => {
     return token
 }
 
+const createNewUserIfNotExists = async (username) => {
+    const userID = await getUserID(username)
+    if (userID[0] === undefined) {
+        // Non esiste
+        console.log("CREO NUOVO USER");
+        sql = "INSERT INTO user (username) VALUES (?)"
+        return database.query(sql, [username])
+    }
+}
+
 // AUTH
 app.use(async (req, res, next) => {
     const auth = req.headers["authorization"]
@@ -143,14 +153,16 @@ app.use(async (req, res, next) => {
             "Authorization": "Bearer " + token
         }
     })
+
     const json = await result.json()
 
     if(json.ok) {
+        await createNewUserIfNotExists(json.username)
         next()
     } else {
-        res.status(403)
+        res.status(result.status)
         res.send({
-            "message": "token not valid"
+            "message": json.message
         })
         return
     }
