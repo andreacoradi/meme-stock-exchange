@@ -21,9 +21,9 @@ let memes = []
 
 
 const insertMeme = (m) => {
-    let sql = "INSERT INTO memes (name, title, url, score, subreddit, archived, created_at) VALUES (?)";
+    const sql = "INSERT INTO memes (name, title, url, score, subreddit, archived, created_at) VALUES (?)";
 
-    let values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived, m.created_utc]
+    const values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived, m.created_utc]
     con.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("inserisco", m.name);
@@ -32,8 +32,8 @@ const insertMeme = (m) => {
 }
 
 const updateMeme = (m) => {
-    let sql = "UPDATE memes SET score = ?, archived = ? WHERE name = ?";
-    let values = [m.score, m.archived, m.name]
+    const sql = "UPDATE memes SET score = ?, archived = ? WHERE name = ?";
+    const values = [m.score, m.archived, m.name]
     con.query(sql, values, function (error, results, fields) {
         if(error) throw error
         // console.log("Result: ", results);
@@ -42,7 +42,7 @@ const updateMeme = (m) => {
 }
 
 const checkIfUnique = (m) => {
-    let sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
+    const sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
 
     con.query(sql, m.name, function (err, result) {
         if (err) throw err;
@@ -61,10 +61,12 @@ const checkIfUnique = (m) => {
     });
 }
 
+// TODO Metti più subreddit e la possibilità di scegliere hot/new
 
 const getMemes = async () => {
-    let r = await fetch("https://www.reddit.com/r/dankmemes/new.json");
-    let json = await r.json()
+    const r = await fetch("https://www.reddit.com/r/dankmemes/new.json");
+    "https://www.reddit.com/r/dankmemes/api/info.json?id=t3_gnu57v"
+    const json = await r.json()
     memes = json.data.children
     // console.log(memes);
     memes.forEach(m => {
@@ -78,12 +80,9 @@ const getMemes = async () => {
 // */15 * * * *
 // Ogni ora
 // 0 * * * *
-var job = new CronJob('* * * * *', getMemes, null, true, "Europe/Berlin")
+var aggiungiMeme = new CronJob('*/30 * * * *', getMemes, null, true, "Europe/Berlin")
 
 //getMemes()
 
-
-
-
-job.start();
+aggiungiMeme.start();
 

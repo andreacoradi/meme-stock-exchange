@@ -2,12 +2,14 @@ const express = require("express")
 const mysql = require("promise-mysql")
 require('dotenv').config()
 const fetch = require("node-fetch")
+const cors = require("cors")
 
 const AUTH_URL = "https://auth-go.rover.acoradi.xyz/api/v1"
 
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 
 let database
 
@@ -154,6 +156,43 @@ app.use(async (req, res, next) => {
     }
 })
 
+const getPortfolio = async (userID) => {
+    try{
+        const sql =`SELECT quantita, name, valore_meme, data_acquisto, title, url, score, subreddit
+        FROM investment, memes 
+        WHERE investment.id_meme = memes.name AND id_utente = ?`
+        return database.query(sql,[userID])
+    } catch (error) {
+        throw error
+    }
+}
+
+
+app.get("/users/:username/portfolio", async(req, res) => {
+    const username = req.params.username
+    const tokenUsername = await getUsername(getToken(req))
+    console.log(username, tokenUsername);
+    if(username !== tokenUsername) {
+        res.status(400)
+        res.send({
+            "message": "token does not match"
+        })
+        return
+    }
+
+    try {
+        const userID = (await getUserID(username))[0].id
+        console.log("USERID", userID);
+        const portfolio = await getPortfolio(userID)
+        console.log(portfolio)
+        res.send({
+            "data" : portfolio
+        })
+    } catch (error) {
+        throw error
+    }
+})
+
 app.get("/memes", async (req, res) => {
     try {
         const count = req.query.count
@@ -193,7 +232,7 @@ app.post("/memes/:id", async (req, res) => {
         const username = await getUsername(token)
         
         let userID = await getUserID(username)
-        
+
         if(userID.length === 0) {
             res.send({
                 "message": "no user found"
