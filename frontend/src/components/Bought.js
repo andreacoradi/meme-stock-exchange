@@ -3,10 +3,10 @@ import React from "react"
 import { MemeList } from "./MemeList"
 import { Searchbar } from "./Searchbar"
 
-export const Home = () => {
+export const Bought = () => {
   return (
     <div className="d-flex flex-column">
-      <div className="p-1">
+      <div className="d-flex justify-content-center flex-grow-1 bd-highlight">
         <Searchbar />
       </div>
       <div className="p-1">

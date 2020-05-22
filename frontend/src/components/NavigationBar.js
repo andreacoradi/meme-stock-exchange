@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
+// import { Link } from "react-router-dom"
 import { Nav, Navbar } from "react-bootstrap"
 import styled from "styled-components"
 import logo from "../assets/profile.png"
@@ -28,20 +28,15 @@ export const NavigationBar = () => (
         <Navbar.Brand href="">MemeExchange</Navbar.Brand>
       </Nav.Item>
       <Nav.Item>
-        <img class="profile" src={logo} alt="" />
+        <img className="profile" src={logo} alt="" />
       </Nav.Item>
       <Navbar.Collapse>
         <Nav className="mr-auto">
           <Nav.Link>Hi user</Nav.Link>
-          <Nav.Link href="#memes">
-            <Link to="/memes">My Memes</Link>
-          </Nav.Link>
-          <Nav.Link href="#memes">
-            <Link to="/ranking">Ranking</Link>
-          </Nav.Link>
-          <Nav.Link href="#memes">
-            <Link to="/">Logout</Link>
-          </Nav.Link>
+          <Nav.Link href="/bought">My memes</Nav.Link>
+          <Nav.Link href="/market">Market</Nav.Link>
+          <Nav.Link href="/ranking">Rating</Nav.Link>
+          <Nav.Link href="/memes">Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

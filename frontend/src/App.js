@@ -6,10 +6,12 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
+  Redirect,
   // Redirect,
 } from "react-router-dom"
 
-import { Home } from "./components/Home"
+import { Market } from "./components/Market"
+import { Ranking } from "./components/Ranking"
 import { NavigationBar } from "./components/NavigationBar"
 import { Layout } from "./components/Layout"
 
@@ -23,7 +25,9 @@ class App extends Component {
               <NavigationBar />
               <Layout>
                 <Switch>
-                  <Route exact path="/home" component={Home} />
+                  <Route default path="/market" component={Market} />
+                  <Route default path="/ranking" component={Ranking} />
+                  <Redirect from="/" to="/market" />
                 </Switch>
               </Layout>
             </Router>
