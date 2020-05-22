@@ -178,6 +178,14 @@ const getPortfolio = async (userID) => {
     }
 }
 
+const getUsers = async (count) => {
+    if(!count) {
+        count = 100
+    }
+    const sql = `SELECT username, coins FROM user ORDER BY coins DESC LIMIT ${count}`
+    return database.query(sql)
+}
+
 
 app.get("/users/:username/portfolio", async(req, res) => {
     const username = req.params.username
@@ -199,6 +207,16 @@ app.get("/users/:username/portfolio", async(req, res) => {
         res.send({
             "data" : portfolio
         })
+    } catch (error) {
+        throw error
+    }
+})
+
+app.get("/users", async (req, res) => {
+    try {
+        const count = req.query.count
+        const users = await getUsers(count)
+        res.send(users)
     } catch (error) {
         throw error
     }
