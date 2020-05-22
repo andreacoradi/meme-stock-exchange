@@ -5,11 +5,12 @@ import Auth from "../components/auth/Auth"
 // import memesJSON from "../assets/memes.json"
 
 const { REACT_APP_DEVTOKEN, REACT_APP_DBURI } = process.env
-const userToken = localStorage.getItem("token") || REACT_APP_DEVTOKEN
 
 export class MemeList extends Component {
   constructor() {
     super()
+    this.userToken = localStorage.getItem("token") || REACT_APP_DEVTOKEN
+    console.log(this.userToken);
     this.state = { memesArray: [] }
   }
 
@@ -20,7 +21,7 @@ export class MemeList extends Component {
     await axios
       .get(REACT_APP_DBURI + "/memes?count=10", {
         headers: {
-          authorization: "Bearer " + userToken,
+          authorization: "Bearer " + this.userToken,
         },
       })
       .then((response) => {
@@ -33,8 +34,6 @@ export class MemeList extends Component {
         })
       })
       .catch((error) => {
-        // Se c'è qualche problema col token lo elimino
-        localStorage.clear()
         console.log(error)
       })
     // only for testing since I have CORS troubles

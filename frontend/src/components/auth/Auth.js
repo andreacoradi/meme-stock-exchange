@@ -44,6 +44,7 @@ class Auth {
           denyAccess() // maybe redirect to a certain page
         }
       })
+      // FIXME finisce qua se metti la password sbagliata...
       .catch((err) => console.log("AXIOS ERROR", err))
   }
 
@@ -79,6 +80,7 @@ class Auth {
 
   logout(cb) {
     this.authenticated = false
+    localStorage.clear()
     cb()
   }
 
