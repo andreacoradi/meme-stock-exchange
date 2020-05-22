@@ -29,11 +29,14 @@ class Auth {
       data: content,
     })
       .then((response) => {
+        return response.data
+      })
+      .then((response) => {
         console.log("RESPONSE RECEIVED", response)
-        if (response.data.ok === true) {
-          console.log(content.username, response.data.message)
+        if (response.ok) {
+          console.log(content.username, response.message)
           this.authenticated = true
-          this.TOKEN = response.data.data // nome discutibile bro
+          this.TOKEN = response.data // nome discutibile bro
           this.username = content.username
           cb() // callback
         } else {
@@ -59,8 +62,10 @@ class Auth {
       config: { headers: {} },
     })
       .then((response) => {
+        return response.data
+      }).then((response) => {
         console.log("RESPONSE RECEIVED", response)
-        if (response.data.hashedPassword) {
+        if (response.hashedPassword) {
           this.authenticated = true
           this.username = content.username
           cb()
