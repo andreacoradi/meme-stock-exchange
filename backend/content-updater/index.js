@@ -24,6 +24,8 @@ mysql.createConnection({
     aggiungiMeme.start();
     rimuoviMeme.start();
     aggiornaMeme.start();
+
+    deleteOldMemes()
 }).catch(err => {
     throw err
 })
@@ -82,6 +84,11 @@ const isInInvestment = async (memeID) => {
     }
 }
 
+const hasValidImage = async (url) => {
+    const result = await fetch(url)
+    return result.status !== 404
+}
+
 const updateMemeByID = async (memeID) => {
     const subreddit = "dankmemes"
     const result = await fetch(`${API_URL}/${subreddit}/api/info.json?id=${memeID}`)
@@ -117,10 +124,17 @@ const updateInvestments = async () => {
 }
 
 const deleteOldMemes = async () => {
-    const sql = "SELECT name, created_at FROM memes"
+    const sql = "SELECT name, created_at, url FROM memes"
     const result = await database.query(sql)
     console.log(result.length);
-    result.forEach(m => {
+    result.forEach(async m => {
+        const validImg = await hasValidImage(m.url)
+        if(!validImg) {
+            console.log("INVALID IMAGE", m.id_meme);
+            removeFromDB(m.name)
+            return
+        }
+
         // Converto in millisecondi
         const dataMeme = m.created_at * 1000
         const deltaMs = Date.now() - dataMeme
@@ -141,4 +155,4 @@ var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Ber
 var rimuoviMeme = new CronJob('0 8 * * *', deleteOldMemes, null, true, "Europe/Berlin")
 
 // Ogni 15 minuti
-var aggiornaMeme = new CronJob('*/15 * * * *', updateMemeByID, null, true, "Europe/Berlin")
+var aggiornaMeme = new CronJob('*/15 * * * *', updateInvestments, null, true, "Europe/Berlin")
