@@ -130,7 +130,7 @@ const deleteOldMemes = async () => {
     result.forEach(async m => {
         const validImg = await hasValidImage(m.url)
         if(!validImg) {
-            console.log("INVALID IMAGE", m.id_meme);
+            console.log("INVALID IMAGE", m.name);
             removeFromDB(m.name)
             return
         }
