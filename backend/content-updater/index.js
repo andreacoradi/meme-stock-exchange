@@ -23,6 +23,9 @@ mysql.createConnection({
 }).then(() => {
     aggiungiMeme.start();
     rimuoviMeme.start();
+    aggiornaMeme.start();
+
+    updateInvestments()
 }).catch(err => {
     throw err
 })
@@ -81,8 +84,16 @@ const isInInvestment = async (memeID) => {
     }
 }
 
-// TODO Update memes per ID
-// API REQUEST "https://www.reddit.com/r/dankmemes/api/info.json?id=MEMEID"
+const updateMemeByID = async (memeID) => {
+    const subreddit = "dankmemes"
+    const result = await fetch(`${API_URL}/${subreddit}/api/info.json?id=${memeID}`)
+    const json = await result.json()
+    if(json.data.children.length === 0) {
+        throw new Error("meme non esiste")
+    }
+    const meme = json.data.children[0].data
+    updateMeme(meme)
+}
 
 const addMemes = async () => {
     // TODO Metti più subreddit e la possibilità di scegliere hot/new
@@ -95,6 +106,15 @@ const addMemes = async () => {
     const json = await r.json()
     json.data.children.forEach(meme => {
         checkIfUnique(meme.data)
+    })
+}
+
+const updateInvestments = async () => {
+    const sql = "SELECT id_meme FROM investment"
+    const result = await database.query(sql)
+    result.forEach(inv => {
+        // AGGIORNO IL MEME CON QUESTO ID
+        updateMemeByID(inv.id_meme)
     })
 }
 
@@ -121,3 +141,6 @@ var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Ber
 
 // Una volta al giorno alle 8 di mattina
 var rimuoviMeme = new CronJob('0 8 * * *', deleteOldMemes, null, true, "Europe/Berlin")
+
+// Ogni 15 minuti
+var aggiornaMeme = new CronJob('*/15 * * * *', updateMemeByID, null, true, "Europe/Berlin")
