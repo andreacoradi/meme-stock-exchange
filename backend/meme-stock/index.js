@@ -76,16 +76,16 @@ const getUserID = async (username) => {
 
 const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
     try {
-        let sql = "SELECT COUNT(*) AS Quanti FROM investment WHERE id_meme = ? AND id_utente = ?"
+        let sql = "SELECT COUNT(*) AS Quanti, quantita FROM investment WHERE id_meme = ? AND id_utente = ?"
 
-        const result = (await database.query(sql, [memeID, userID]))[0].Quanti
-        if(result === 0) {
+        const result = (await database.query(sql, [memeID, userID]))[0]
+        if(result.Quanti === 0) {
             sql = "INSERT INTO investment (id_meme, id_utente, quantita, valore_meme) VALUES (?, ?, ?, ?)"
             const values = [memeID, userID, quantita, valoreMeme]
             return database.query(sql, values)
         } else {
             sql = "UPDATE investment SET quantita = ? WHERE id_meme = ? AND id_utente = ?"
-            return database.query(sql, [result + quantita, memeID, userID])
+            return database.query(sql, [result.quantita + quantita, memeID, userID])
         }
     } catch (error) {
         console.error(error);
@@ -97,9 +97,8 @@ const sellMeme = async (memeID, userID, quantita) => {
     console.log(memeID, userID);
     return database.query(sql, [memeID, userID])
     .then(result => {
-        console.log("Quantità di meme trovata", result);
-        if(!result) {
-            throw new Error("questo meme non esiste")
+        if(result.length === 0) {
+            throw new Error("non hai azioni di questo meme")
         }
         const q = result[0].quantita
         let values = []
