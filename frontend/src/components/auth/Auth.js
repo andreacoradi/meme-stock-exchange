@@ -1,8 +1,9 @@
 import axios from "axios"
 
-// copypasted straight from another auth implementation:
-
-// Todo: pretty much everything
+//  copypasted straight from another auth implementation:
+//  Todo: registration, login is done actually :D
+//  The big problem: auth is not global, it seems like every time its imported by other components a totally new instance is created.
+//  This is dogshit and I don't want to store sensitive information in the state, let alone even using global shit with React.
 
 const { REACT_APP_AUTH_LINK } = process.env
 
@@ -29,10 +30,10 @@ class Auth {
     })
       .then((response) => {
         console.log("RESPONSE RECEIVED", response)
-        if (response.data.authenticated === true) {
-          console.log(content.username, "is authenticated and has logged in")
+        if (response.data.ok === true) {
+          console.log(content.username, response.data.message)
           this.authenticated = true
-          this.TOKEN = response.data.token
+          this.TOKEN = response.data.data // nome discutibile bro
           this.username = content.username
           cb() // callback
         } else {
@@ -42,6 +43,7 @@ class Auth {
       .catch((err) => console.log("AXIOS ERROR", err))
   }
 
+  // todo
   signup(credentials, cb, somethingWrong) {
     let content = {
       username: credentials.username,
@@ -49,7 +51,7 @@ class Auth {
     }
 
     // let url = process.env.backend_address + "/users"
-    let url = "https://webtoken-mockup--d35p4c1t0.repl.co/users"
+    let url = "auth url here"
     axios({
       method: "post",
       url: url,

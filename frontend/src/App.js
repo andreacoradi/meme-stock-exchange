@@ -6,15 +6,17 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
   // Redirect,
 } from "react-router-dom"
 
 import { Market } from "./components/Market"
 import Login from "./components/Login"
 import { Ranking } from "./components/Ranking"
+import { ProtectedRoute } from "./components/ProtectedRoute"
 import { NavigationBar } from "./components/NavigationBar"
+import { Vault } from "./components/Vault"
 import { Layout } from "./components/Layout"
+import { NoMatch } from "./components/NoMatch"
 
 class App extends Component {
   render() {
@@ -26,10 +28,12 @@ class App extends Component {
               <NavigationBar />
               <Layout>
                 <Switch>
-                  <Route default path="/market" component={Market} />
-                  <Route default path="/ranking" component={Ranking} />
-                  <Route default path="/login" component={Login} />
-                  <Redirect from="/" to="/market" />
+                  <Route exact path="/" component={Market} />
+                  <Route path="/login" component={Login} />
+                  <ProtectedRoute path="/vault" component={Vault} />
+                  <Route path="/market" component={Market} />
+                  <Route path="/ranking" component={Ranking} />
+                  <Route component={NoMatch} />
                 </Switch>
               </Layout>
             </Router>

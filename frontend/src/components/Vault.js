@@ -3,7 +3,7 @@ import React from "react"
 import { MemeList } from "./MemeList"
 import { Searchbar } from "./Searchbar"
 
-export const Bought = () => {
+export const Vault = () => {
   return (
     <div className="d-flex flex-column">
       <div className="d-flex justify-content-center flex-grow-1 bd-highlight">

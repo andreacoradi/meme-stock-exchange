@@ -1,6 +1,7 @@
 import React from "react"
 // import { Link } from "react-router-dom"
 import { Nav, Navbar } from "react-bootstrap"
+import Auth from "./auth/Auth"
 import styled from "styled-components"
 import logo from "../assets/profile.png"
 
@@ -19,7 +20,9 @@ const Styles = styled.div`
   }
 `
 
-export const NavigationBar = () => (
+const welcome = Auth.username !== "" ? `Hi ${Auth.username}` : "Hi user"
+
+export const NavigationBar = (props) => (
   <Styles>
     <Navbar expand="true" bg="dark" variant="dark">
       {/* <Navbar.Brand href="/">MemExchange</Navbar.Brand> */}
@@ -28,15 +31,27 @@ export const NavigationBar = () => (
         <Navbar.Brand href="">MemeExchange</Navbar.Brand>
       </Nav.Item>
       <Nav.Item>
-        <img className="profile" src={logo} alt="" />
+        <a href="/login">
+          <img className="profile" src={logo} alt="" />
+        </a>
       </Nav.Item>
       <Navbar.Collapse>
         <Nav className="mr-auto">
-          <Nav.Link>Hi user</Nav.Link>
-          <Nav.Link href="/bought">My memes</Nav.Link>
+          <Nav.Link>{welcome}</Nav.Link>
+          <Nav.Link href="/vault">My Memes</Nav.Link>
           <Nav.Link href="/market">Market</Nav.Link>
           <Nav.Link href="/ranking">Rating</Nav.Link>
-          <Nav.Link href="/memes">Logout</Nav.Link>
+          <Nav.Link
+            href="/"
+            onClick={() => {
+              Auth.logout(() => {
+                console.log("User disconnected")
+              })
+            }}
+            to="/"
+          >
+            Logout
+          </Nav.Link>
         </Nav>
       </Navbar.Collapse>
     </Navbar>

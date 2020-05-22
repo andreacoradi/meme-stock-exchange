@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import { Materialcard } from "../components/MaterialCard"
 import axios from "axios"
-import auth from "../components/auth/Auth"
+import Auth from "../components/auth/Auth"
 // import memesJSON from "../assets/memes.json"
 
 const { REACT_APP_DEVTOKEN, REACT_APP_DBURI } = process.env
-const userToken = auth.TOKEN || REACT_APP_DEVTOKEN
+const userToken = Auth.TOKEN || REACT_APP_DEVTOKEN
 
 export class MemeList extends Component {
   constructor() {
