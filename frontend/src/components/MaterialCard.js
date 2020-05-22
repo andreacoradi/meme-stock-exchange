@@ -63,9 +63,9 @@ export class Materialcard extends Component {
                   style={{ minWidth: "2em" }}
                 ></div>
                 <div className="p-2 mr-auto">{this.props.meme.score}</div>
-                <di className="p-2 flex-grow-1 bd-highlight">
+                <div className="p-2 flex-grow-1 bd-highlight">
                   {this.props.meme.title}
-                </di>
+                </div>
               </div>
             </MDBCollapseHeader>
 

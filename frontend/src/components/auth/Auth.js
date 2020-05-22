@@ -37,6 +37,7 @@ class Auth {
           console.log(content.username, response.message)
           this.authenticated = true
           this.TOKEN = response.data // nome discutibile bro
+          localStorage.setItem("token", this.TOKEN)
           this.username = content.username
           cb() // callback
         } else {
