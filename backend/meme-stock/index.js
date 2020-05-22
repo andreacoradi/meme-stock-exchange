@@ -129,7 +129,7 @@ const getToken = (req) => {
 
 const createNewUserIfNotExists = async (username) => {
     const userID = await getUserID(username)
-    if (userID[0] === undefined) {
+    if (userID.length === 0) {
         // Non esiste
         console.log("CREO NUOVO USER");
         sql = "INSERT INTO user (username) VALUES (?)"
