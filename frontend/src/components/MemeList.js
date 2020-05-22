@@ -13,6 +13,8 @@ export class MemeList extends Component {
     this.state = { memesArray: [] }
   }
 
+  // fetcher -> memelist -> several materialcards
+
   async componentDidMount() {
     // todo fetch dal db
     await axios

@@ -11,6 +11,7 @@ import {
 } from "react-router-dom"
 
 import { Market } from "./components/Market"
+import Login from "./components/Login"
 import { Ranking } from "./components/Ranking"
 import { NavigationBar } from "./components/NavigationBar"
 import { Layout } from "./components/Layout"
@@ -27,6 +28,7 @@ class App extends Component {
                 <Switch>
                   <Route default path="/market" component={Market} />
                   <Route default path="/ranking" component={Ranking} />
+                  <Route default path="/login" component={Login} />
                   <Redirect from="/" to="/market" />
                 </Switch>
               </Layout>

@@ -4,6 +4,8 @@ import axios from "axios"
 
 // Todo: pretty much everything
 
+const { REACT_APP_AUTH_LINK } = process.env
+
 class Auth {
   constructor() {
     this.authenticated = false
@@ -17,13 +19,7 @@ class Auth {
       password: credentials.password,
     }
 
-    // let url = "http://localhost:3000/users/" + credentials.username
-
-    // if (!process.env.backend_address) {
-    //   console.log("no backend address")
-    // }
-
-    let url = "HereTheURI" + credentials.username
+    let url = `${REACT_APP_AUTH_LINK}/users/${credentials.username}`
     // console.log(url)
 
     axios({
