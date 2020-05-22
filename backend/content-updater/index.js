@@ -24,6 +24,8 @@ mysql.createConnection({
     aggiungiMeme.start();
     rimuoviMeme.start();
     aggiornaMeme.start();
+
+    deleteOldMemes()
 }).catch(err => {
     throw err
 })
