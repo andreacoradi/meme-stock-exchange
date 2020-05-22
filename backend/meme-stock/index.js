@@ -253,7 +253,13 @@ app.post("/memes/:id", async (req, res) => {
         
         userID = userID[0].id
 
-        const valoreMeme = (await getMemeValue(id))[0].score
+        let valoreMeme = (await getMemeValue(id))
+
+        if (valoreMeme.length === 0) {
+            throw new Error("meme non trovato")
+        }
+
+        valoreMeme = valoreMeme[0].score
 
         const userCoins = (await getCoins(username))[0].coins
         
