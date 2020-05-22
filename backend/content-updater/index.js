@@ -1,30 +1,37 @@
 const fetch = require('node-fetch');
-var mysql = require('mysql');
-var CronJob = require('cron').CronJob;
+const mysql = require("promise-mysql")
+const CronJob = require('cron').CronJob;
 require('dotenv').config()
 
-var con = mysql.createConnection({
+// Millisecondi in un giorno
+const MS_IN_A_DAY = 1000*60*60*24
+// Dopo quanti giorni un meme senza investimenti viene eliminato
+const MAX_MEME_AGE = 5
+
+const API_URL = "https://www.reddit.com/r"
+
+let database
+
+mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
-});
-
-con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-});
-
-
-
-let memes = []
-
+}).then(c => {
+    console.log("Connesso!");
+    database = c
+}).then(() => {
+    aggiungiMeme.start();
+    rimuoviMeme.start();
+}).catch(err => {
+    throw err
+})
 
 const insertMeme = (m) => {
     const sql = "INSERT INTO memes (name, title, url, score, subreddit, archived, created_at) VALUES (?)";
 
     const values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived, m.created_utc]
-    con.query(sql, [values], function (err, result) {
+    database.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("inserisco", m.name);
         console.log("Number of records inserted: " + result.affectedRows);
@@ -34,9 +41,8 @@ const insertMeme = (m) => {
 const updateMeme = (m) => {
     const sql = "UPDATE memes SET score = ?, archived = ? WHERE name = ?";
     const values = [m.score, m.archived, m.name]
-    con.query(sql, values, function (error, results, fields) {
+    database.query(sql, values, function (error, results, fields) {
         if(error) throw error
-        // console.log("Result: ", results);
         console.log("Updated", m.name);
     })
 }
@@ -44,7 +50,7 @@ const updateMeme = (m) => {
 const checkIfUnique = (m) => {
     const sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
 
-    con.query(sql, m.name, function (err, result) {
+    database.query(sql, m.name, function (err, result) {
         if (err) throw err;
         console.log("Number of records inserted: " + result[0].Quanti);
         if(result[0].Quanti === 0) {
@@ -61,28 +67,57 @@ const checkIfUnique = (m) => {
     });
 }
 
-// TODO Metti più subreddit e la possibilità di scegliere hot/new
+const removeFromDB = async (memeID) => {
+    const sql = "DELETE FROM memes WHERE name = ?"
+    return database.query(sql, [memeID])
+}
 
-const getMemes = async () => {
-    const r = await fetch("https://www.reddit.com/r/dankmemes/new.json");
-    "https://www.reddit.com/r/dankmemes/api/info.json?id=t3_gnu57v"
+const isInInvestment = async (memeID) => {
+    const sql = "SELECT COUNT(*) AS Quanti FROM investment WHERE id_meme = ?"
+    const result = await database.query(sql, [memeID])
+    if(result[0].Quanti === 0) {
+        console.log("ELIMINO MEME", memeID);
+        await removeFromDB(memeID)
+    }
+}
+
+// TODO Update memes per ID
+// API REQUEST "https://www.reddit.com/r/dankmemes/api/info.json?id=MEMEID"
+
+const addMemes = async () => {
+    // TODO Metti più subreddit e la possibilità di scegliere hot/new
+    const subreddit = "dankmemes"
+    // new = High Risk High Reward
+    // hot = Lower Risk Lower Gains
+    const difficulty = "new"
+
+    const r = await fetch(`${API_URL}/${subreddit}/${difficulty}.json`);
     const json = await r.json()
-    memes = json.data.children
-    // console.log(memes);
-    memes.forEach(m => {
-        checkIfUnique(m.data)
+    json.data.children.forEach(meme => {
+        checkIfUnique(meme.data)
+    })
+}
+
+const deleteOldMemes = async () => {
+    const sql = "SELECT name, created_at FROM memes"
+    const result = await database.query(sql)
+    console.log(result.length);
+    result.forEach(m => {
+        // Converto in millisecondi
+        const dataMeme = m.created_at * 1000
+        const deltaMs = Date.now() - dataMeme
+
+        // Divido per quanti millisecondi ci sono in un giorno
+        const deltaGiorni = Math.floor(deltaMs / MS_IN_A_DAY)
+
+        if(deltaGiorni > MAX_MEME_AGE) {
+            isInInvestment(m.name)
+        }
     })
 }
 
 // Ogni 30 minuti
-// '0 0/30 * 1/1 * ? *'
-// Ogni 15 minuti
-// */15 * * * *
-// Ogni ora
-// 0 * * * *
-var aggiungiMeme = new CronJob('*/30 * * * *', getMemes, null, true, "Europe/Berlin")
+var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Berlin")
 
-//getMemes()
-
-aggiungiMeme.start();
-
+// Una volta al giorno alle 8 di mattina
+var rimuoviMeme = new CronJob('0 8 * * *', deleteOldMemes, null, true, "Europe/Berlin")
