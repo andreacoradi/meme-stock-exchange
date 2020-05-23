@@ -80,8 +80,8 @@ const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
 
         const result = (await database.query(sql, [memeID, userID]))[0]
         if(result.Quanti === 0) {
-            sql = "INSERT INTO investment (id_meme, id_utente, quantita, valore_meme) VALUES (?, ?, ?, ?)"
-            const values = [memeID, userID, quantita, valoreMeme]
+            sql = "INSERT INTO investment (id_meme, id_utente, quantita, coin_investiti) VALUES (?, ?, ?, ?)"
+            const values = [memeID, userID, quantita, valoreMeme*quantita]
             return database.query(sql, values)
         } else {
             sql = "UPDATE investment SET quantita = ?, coin_investiti = ? WHERE id_meme = ? AND id_utente = ?"
@@ -103,7 +103,7 @@ const sellMeme = async (memeID, userID, quantita) => {
         const q = result[0].quantita
         let values = []
         if(quantita > q) {
-            throw new Error("Non hai abbastanza azioni")
+            throw new Error("non hai abbastanza azioni")
         } else if (q == quantita) {
             // Se vendo tutto cancello
             sql = "DELETE FROM investment WHERE id_meme = ? AND id_utente = ?"
@@ -115,9 +115,6 @@ const sellMeme = async (memeID, userID, quantita) => {
         }
         database.query(sql, values)
     })
-    .catch(err => {
-        throw err
-    })
 }
 
 // Sappiamo che il token c'è ed è valido perchè avviene un controllo prima nel middleware AUTH
@@ -127,25 +124,31 @@ const getToken = (req) => {
     return token
 }
 
-const createNewUserIfNotExists = async (username) => {
-    const userID = await getUserID(username)
-    if (userID.length === 0) {
-        // Non esiste
-        console.log("CREO NUOVO USER");
-        sql = "INSERT INTO user (username) VALUES (?)"
-        return database.query(sql, [username])
-    }
+const createNewUser = async (username) => {
+    console.log("CREO NUOVO USER", username);
+    sql = "INSERT INTO user (username) VALUES (?)"
+    return database.query(sql, [username])
 }
 
 // AUTH
 app.use(async (req, res, next) => {
     const auth = req.headers["authorization"]
     if(!auth) {
-        res.status(400)
-        res.send("no vecio, ma l'auth?")
+        res.status(401)
+        res.send({
+            "message": "authorization is needed"
+        })
         return
     }
     const token = auth.split(" ")[1]
+
+    if(!token) {
+        res.status(403)
+        res.send({
+            "message": "no token provided"
+        })
+        return
+    }
 
     const result = await fetch(`${AUTH_URL}/auth`, {
         headers: {
@@ -156,8 +159,15 @@ app.use(async (req, res, next) => {
     const json = await result.json()
 
     if(json.ok) {
-        await createNewUserIfNotExists(json.username)
-        next()
+        try {
+            const userID = await getUserID(json.username)
+            if(userID.length === 0) {
+                await createNewUser(json.username)
+            }
+            next()
+        } catch (error) {
+            console.error(error)
+        }
     } else {
         res.status(result.status)
         res.send({
@@ -184,6 +194,11 @@ const getUsers = async (count) => {
     }
     const sql = `SELECT username, coins FROM user ORDER BY coins DESC LIMIT ${count}`
     return database.query(sql)
+}
+
+const getUser = async (username) => {
+    const sql = "SELECT username, coins FROM user WHERE username = ?"
+    return database.query(sql, [username])
 }
 
 
@@ -222,6 +237,16 @@ app.get("/users", async (req, res) => {
     }
 })
 
+app.get("/users/:username", async (req, res) => {
+    try {
+        const username = req.params.username
+        const user = await getUser(username)
+        res.send(user)
+    } catch (error) {
+        throw error
+    }
+})
+
 app.get("/memes", async (req, res) => {
     try {
         const count = req.query.count
@@ -243,14 +268,9 @@ app.get("/memes/:id", async (req, res) => {
 })
 
 app.post("/memes/:id", async (req, res) => {
-    console.log(req.params.id);
     const id = req.params.id
-    
     const token = getToken(req)
-
     const { action, quantity } = req.body
-    console.log(token);
-    console.log(action, quantity);
     if(!action || !quantity || !token) {
         res.status(400)
         res.send("no frah")
@@ -286,7 +306,6 @@ app.post("/memes/:id", async (req, res) => {
                 throw new Error("not enough coins")
             }
             await buyMeme(id, valoreMeme, userID, quantity)
-
             await setCoins(username, userCoins - (valoreMeme * quantity))
         } else if (action === "sell") {
             await sellMeme(id, userID, quantity)
