@@ -76,7 +76,7 @@ const getUserID = async (username) => {
 
 const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
     try {
-        let sql = "SELECT COUNT(*) AS Quanti, quantita FROM investment WHERE id_meme = ? AND id_utente = ?"
+        let sql = "SELECT COUNT(*) AS Quanti, quantita, coin_investiti FROM investment WHERE id_meme = ? AND id_utente = ?"
 
         const result = (await database.query(sql, [memeID, userID]))[0]
         if(result.Quanti === 0) {
@@ -84,8 +84,8 @@ const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
             const values = [memeID, userID, quantita, valoreMeme]
             return database.query(sql, values)
         } else {
-            sql = "UPDATE investment SET quantita = ? WHERE id_meme = ? AND id_utente = ?"
-            return database.query(sql, [result.quantita + quantita, memeID, userID])
+            sql = "UPDATE investment SET quantita = ?, coin_investiti = ? WHERE id_meme = ? AND id_utente = ?"
+            return database.query(sql, [result.quantita + quantita, result.coin_investiti + (valoreMeme*quantita) ,memeID, userID])
         }
     } catch (error) {
         console.error(error);
@@ -169,7 +169,7 @@ app.use(async (req, res, next) => {
 
 const getPortfolio = async (userID) => {
     try{
-        const sql =`SELECT quantita, name, valore_meme, data_acquisto, title, url, score, subreddit
+        const sql =`SELECT quantita, name, coin_investiti, data_acquisto, title, url, score, subreddit
         FROM investment, memes 
         WHERE investment.id_meme = memes.name AND id_utente = ?`
         return database.query(sql,[userID])
