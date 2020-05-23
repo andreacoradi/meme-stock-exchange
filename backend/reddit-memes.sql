@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.5deb2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Creato il: Mag 22, 2020 alle 11:47
--- Versione del server: 10.3.22-MariaDB-1ubuntu1
--- Versione PHP: 7.4.3
+-- Host: srv-captain--maria-db
+-- Creato il: Mag 23, 2020 alle 22:53
+-- Versione del server: 10.4.13-MariaDB-1:10.4.13+maria~bionic
+-- Versione PHP: 7.4.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -34,7 +33,7 @@ CREATE TABLE `investment` (
   `id_meme` varchar(15) NOT NULL,
   `quantita` int(11) NOT NULL,
   `data_acquisto` timestamp NOT NULL DEFAULT current_timestamp(),
-  `valore_meme` int(10) UNSIGNED NOT NULL
+  `coin_investiti` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
