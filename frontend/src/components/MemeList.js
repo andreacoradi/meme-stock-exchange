@@ -1,16 +1,15 @@
 import React, { Component } from "react"
 import { Materialcard } from "../components/MaterialCard"
 import axios from "axios"
-import Auth from "../components/auth/Auth"
 // import memesJSON from "../assets/memes.json"
 
-const { REACT_APP_DEVTOKEN, REACT_APP_DBURI } = process.env
+const { REACT_APP_DBURI } = process.env
 
 export class MemeList extends Component {
   constructor() {
     super()
-    this.userToken = localStorage.getItem("token") || REACT_APP_DEVTOKEN
-    console.log(this.userToken);
+    this.userToken = localStorage.getItem("token") // || REACT_APP_DEVTOKEN
+    // console.log(this.userToken)
     this.state = { memesArray: [] }
   }
 
@@ -25,7 +24,7 @@ export class MemeList extends Component {
         },
       })
       .then((response) => {
-        console.log(response)
+        // console.log(response)
         // meme list
         response.data.forEach((meme) => {
           const card = <Materialcard meme={meme} key={Date.now()} />

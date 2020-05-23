@@ -20,7 +20,9 @@ const Styles = styled.div`
   }
 `
 
-const welcome = Auth.username !== "" ? `Hi ${Auth.username}` : "Hi user"
+const welcome = localStorage.getItem("username")
+  ? `Hi ${localStorage.getItem("username")}`
+  : "Hi user"
 
 export const NavigationBar = (props) => (
   <Styles>

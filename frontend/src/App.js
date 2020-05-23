@@ -11,6 +11,7 @@ import {
 
 import { Market } from "./components/Market"
 import Login from "./components/Login"
+import Signup from "./components/Signup"
 import { Ranking } from "./components/Ranking"
 import { ProtectedRoute } from "./components/ProtectedRoute"
 import { NavigationBar } from "./components/NavigationBar"
@@ -30,6 +31,7 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/" component={Market} />
                   <Route path="/login" component={Login} />
+                  <Route path="/signup" component={Signup} />
                   <ProtectedRoute path="/vault" component={Vault} />
                   <Route path="/market" component={Market} />
                   <Route path="/ranking" component={Ranking} />

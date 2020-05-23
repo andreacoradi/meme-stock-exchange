@@ -3,7 +3,7 @@ import axios from "axios"
 import Auth from "./auth/Auth"
 
 const { REACT_APP_DEVTOKEN, REACT_APP_DBURI } = process.env
-const userToken = Auth.TOKEN || REACT_APP_DEVTOKEN
+const userToken = localStorage.getItem("token") //  || REACT_APP_DEVTOKEN
 let memesArray = []
 let rankedUsers = []
 let ownedArray = []
@@ -42,13 +42,16 @@ const fetchMarket = async (count) => {
 const fetchOwned = async () => {
   memesArray = []
   await axios
-    .get(`${REACT_APP_DBURI}/users/${Auth.username}/portfolio`, {
-      headers: {
-        authorization: "Bearer " + userToken,
-      },
-    })
+    .get(
+      `${REACT_APP_DBURI}/users/${localStorage.getItem("username")}/portfolio`,
+      {
+        headers: {
+          authorization: "Bearer " + userToken,
+        },
+      }
+    )
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       // meme list
       response.data.forEach((meme) => {
         ownedArray.push(meme)
@@ -79,7 +82,7 @@ const fetchRanking = async (count) => {
       },
     })
     .then((response) => {
-      console.log(response)
+      // console.log(response)
       // meme list
       response.data.forEach((user) => {
         rankedUsers.push(user)
