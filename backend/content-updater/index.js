@@ -52,9 +52,8 @@ const updateMeme = (m) => {
 const checkIfUnique = (m) => {
     const sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
 
-    database.query(sql, m.name, function (err, result) {
-        if (err) throw err;
-        console.log("Number of records inserted: " + result[0].Quanti);
+    database.query(sql, [m.name])
+    .then(result => {
         if(result[0].Quanti === 0) {
             insertMeme(m)
         } else {
@@ -66,7 +65,10 @@ const checkIfUnique = (m) => {
                 updateMeme(m)
             }
         }
-    });
+    })
+    .catch(err => {
+        console.error(err)
+    })
 }
 
 const removeFromDB = async (memeID) => {
@@ -79,7 +81,7 @@ const isInInvestment = async (memeID) => {
     const result = await database.query(sql, [memeID])
     if(result[0].Quanti === 0) {
         console.log("ELIMINO MEME", memeID);
-        removeFromDB(memeID)
+        await removeFromDB(memeID)
     }
 }
 
