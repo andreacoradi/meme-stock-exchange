@@ -24,8 +24,6 @@ mysql.createConnection({
     aggiungiMeme.start();
     rimuoviMeme.start();
     aggiornaMeme.start();
-
-    deleteOldMemes()
 }).catch(err => {
     throw err
 })
@@ -80,13 +78,17 @@ const isInInvestment = async (memeID) => {
     const result = await database.query(sql, [memeID])
     if(result[0].Quanti === 0) {
         console.log("ELIMINO MEME", memeID);
-        await removeFromDB(memeID)
+        removeFromDB(memeID)
     }
 }
 
 const hasValidImage = async (url) => {
-    const result = await fetch(url)
-    return result.status !== 404
+    try {
+        const result = await fetch(url)
+        return result.status !== 404
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 const updateMemeByID = async (memeID) => {
@@ -117,6 +119,9 @@ const addMemes = async () => {
 const updateInvestments = async () => {
     const sql = "SELECT id_meme FROM investment"
     const result = await database.query(sql)
+    if(result.length === 0)
+        return
+
     result.forEach(inv => {
         // AGGIORNO IL MEME CON QUESTO ID
         updateMemeByID(inv.id_meme)
