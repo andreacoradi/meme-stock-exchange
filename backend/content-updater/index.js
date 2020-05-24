@@ -92,8 +92,7 @@ const hasValidImage = async (url) => {
 }
 
 const updateMemeByID = async (memeID) => {
-    const subreddit = "dankmemes"
-    const result = await fetch(`${API_URL}/${subreddit}/api/info.json?id=${memeID}`)
+    const result = await fetch(`${API_URL}/api/info.json?id=${memeID}`)
     const json = await result.json()
     if(json.data.children.length === 0) {
         throw new Error("meme non esiste")
