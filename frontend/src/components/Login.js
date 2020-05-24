@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Button, FormGroup, FormControl, FormLabel } from 'react-bootstrap'
-import './style/Login.css'
-import Auth from './auth/Auth'
+import React, { useState } from "react"
+import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap"
+import "./style/Login.css"
+import Auth from "./auth/Auth"
 
 export default function Login(props) {
   //   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState("")
 
   function validateForm() {
     return username.length > 0 && password.length > 0
@@ -18,23 +18,25 @@ export default function Login(props) {
     Auth.login(
       credentials,
       () => {
-        props.history.push('/market')
+        props.history.push("/market")
+        window.location.reload(false)
+        // this fixes the default username being stuck once logged in
       },
       () => {
-        console.log('Wrong credentials')
-        alert('Credenziali errate, prego riprovare')
+        console.log("Wrong credentials")
+        alert("Credenziali errate, prego riprovare")
       }
     )
   }
 
   return (
-    <div className='Login'>
+    <div className="Login">
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId='username'>
+        <FormGroup controlId="username">
           <FormLabel>Username</FormLabel>
           <FormControl
             autoFocus
-            type='username'
+            type="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -48,28 +50,28 @@ export default function Login(props) {
             onChange={e => setEmail(e.target.value)}
           />
         </FormGroup> */}
-        <FormGroup controlId='password'>
+        <FormGroup controlId="password">
           <FormLabel>Password</FormLabel>
           <FormControl
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            type='password'
+            type="password"
           />
         </FormGroup>
         <FormGroup>
           <Button
             block
             disabled={!validateForm()}
-            type='submit'
-            variant='secondary'
+            type="submit"
+            variant="secondary"
           >
             Login
           </Button>
           <Button
             block
-            variant='secondary'
+            variant="secondary"
             onClick={() => {
-              props.history.push('/signup')
+              props.history.push("/signup")
             }}
           >
             Sign Up

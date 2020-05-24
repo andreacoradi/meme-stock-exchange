@@ -1,34 +1,36 @@
-// const UserToken = localStorage.getItem('token')
+const UserToken = localStorage.getItem("token")
+
+const { REACT_APP_DBURI } = process.env
 
 class Exchange {
   // action = "buy" || "sell"
   static transaction(action, memeID, count) {
-    switch (action) {
-      case 'buy':
-        this._buy(memeID, count)
-        break
+    console.log(action, memeID, count)
 
-      case 'sell':
-        this._sell(memeID, count)
-        break
-
-      default:
-        return false
+    const URL = `${REACT_APP_DBURI}/memes/${memeID}`
+    if (action !== "buy" && action !== "sell") {
+      console.log("Can't complete transaction")
+      return false
     }
-  }
 
-  //    JS is a wonderful language but as of now,
-  //    ES6 does not allow private methods in classes.
-  //    Let's enjoy this fuzzy "underscore" naming of
-  //    said methods. If you're a dev, pls, don't use such
-  //    methods if you notice an underscore somewhere :D
-  //    Have a nice day lads
-
-  _buy(memeID, count) {
-    // gonna read docs
-  }
-  _sell(memeID, count) {
-    // gonna read docs
+    fetch(URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: "Bearer " + UserToken,
+      },
+      body: JSON.stringify({
+        action: action,
+        quantity: count,
+      }),
+    })
+      .then((r) => r.json())
+      .then((body) => {
+        console.log(body)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 }
 

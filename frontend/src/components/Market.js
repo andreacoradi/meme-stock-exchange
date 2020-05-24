@@ -9,7 +9,7 @@ export const Market = () => {
       <div className="d-flex justify-content-center flex-grow-1 bd-highlight">
         <Searchbar />
       </div>
-      <div className="p-1">
+      <div className="d-flex justify-content-center">
         <MemeList />
       </div>
     </div>
