@@ -1,19 +1,18 @@
-import React from "react"
-import { Route, Redirect } from "react-router-dom"
-import Auth from "./auth/Auth"
+import React from 'react'
+import { Route, Redirect } from 'react-router-dom'
 
 export const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (Auth.isAuthenticated()) {
+        if (localStorage.getItem('token')) {
           return <Component {...props} />
         } else {
           return (
             <Redirect
               to={{
-                pathname: "/",
+                pathname: '/',
                 state: {
                   from: props.location,
                 },

@@ -11,7 +11,7 @@ class Auth {
     // console.log(url)
     console.log(content)
     fetch(url, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(content),
     })
       .then((r) => r.json())
@@ -19,35 +19,14 @@ class Auth {
         console.log(body)
         if (body.ok) {
           console.log(content.username, body.message)
-          localStorage.setItem("token", body.data)
-          localStorage.setItem("username", content.username)
+          localStorage.setItem('token', body.data)
+          localStorage.setItem('username', content.username)
           cb()
         } else {
-          console.error("Sfigato", body.message)
+          console.error('Sfigato', body.message)
           denyAccess()
         }
       })
-
-    //   axios({
-    //     method: "post",
-    //     url: url,
-    //     data: content,
-    //   })
-    //     .then((response) => {
-    //       return response.data
-    //     })
-    //     .then((response) => {
-    //       console.log("RESPONSE RECEIVED", response)
-    //       if (response.ok) {
-    //         console.log(content.username, response.message)
-    //         localStorage.setItem("token", response.data)
-    //         localStorage.setItem("username", content.username)
-    //       } else {
-    //         denyAccess() // maybe redirect to a certain page
-    //       }
-    //     })
-    //     // FIXME finisce qua se metti la password sbagliata...
-    //     .catch((err) => console.log("AXIOS ERROR", err))
   }
 
   signup(credentials, cb, somethingWrong) {
@@ -57,9 +36,9 @@ class Auth {
     }
     let url = `${REACT_APP_AUTH_LINK}/users`
     fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "content-type": "application/json",
+        'content-type': 'application/json',
       },
       body: JSON.stringify(content),
     })
@@ -67,7 +46,7 @@ class Auth {
       .then((body) => {
         console.log(body)
         if (body.ok) {
-          console.log("All my niggas use fetchfetchgo")
+          console.log('All my niggas use fetchfetchgo')
           this.login(credentials, cb, somethingWrong)
         } else {
           somethingWrong()
