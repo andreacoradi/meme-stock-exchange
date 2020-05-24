@@ -24,6 +24,8 @@ mysql.createPool({
     aggiungiMeme.start();
     rimuoviMeme.start();
     aggiornaMeme.start();
+
+    addMemes()
 }).catch(err => {
     console.error(err)
     process.exit(1)
@@ -33,11 +35,18 @@ const insertMeme = (m) => {
     const sql = "INSERT INTO memes (name, title, url, score, subreddit, archived, created_at) VALUES (?)";
 
     const values = [m.name, m.title, m.url, m.score, m.subreddit, m.archived, m.created_utc]
-    database.query(sql, [values], function (err, result) {
-        if (err) throw err;
-        console.log("inserisco", m.name);
-        console.log("Number of records inserted: " + result.affectedRows);
-    });
+
+    database.query(sql, [values])
+    .then(result => {
+        console.log("Inserisco meme", m.name);
+    })
+    .catch(err => {
+        if(err.code === "ER_DUP_ENTRY") {
+            updateMeme(m)
+            return
+        }
+        console.error(err);
+    })
 }
 
 const updateMeme = (m) => {
@@ -114,7 +123,8 @@ const addMemes = async () => {
     const r = await fetch(`${API_URL}/${subreddit}/${difficulty}.json`);
     const json = await r.json()
     json.data.children.forEach(meme => {
-        checkIfUnique(meme.data)
+        // checkIfUnique(meme.data)
+        insertMeme(meme.data)
     })
 }
 
