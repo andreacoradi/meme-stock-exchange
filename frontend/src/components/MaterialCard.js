@@ -1,110 +1,170 @@
-import React, { Component } from 'react'
+import React, { Component } from "react"
 import {
   MDBCard,
   // MDBCardTitle,
   // MDBCardText,
   MDBCardBody,
-  MDBCollapseHeader,
-  MDBContainer,
+  // MDBCollapseHeader,
+  // MDBContainer,
   MDBIcon,
-  MDBCollapse,
+  // MDBCollapse,
   MDBBtn,
   MDBInput,
-} from 'mdbreact'
+  // MDBCardImage,
+  // MDBCardTitle,
+  // MDBView,
+  MDBMedia,
+  MDBCardFooter,
+  MDBCardHeader,
+  // MDBCardText,
+  MDBModal,
+  MDBModalBody,
+} from "mdbreact"
 
-import { Image, Modal } from 'react-bootstrap'
-import Exchange from './Exchange'
+import Exchange from "./Exchange"
 
 export class Materialcard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      collapseID: '',
+      collapseID: "",
       showModal: false,
-      quantity: 1,
+      quantity: "",
     }
   }
 
   toggleCollapse = (collapseID) => () =>
     this.setState((prevState) => ({
-      collapseID: prevState.collapseID !== collapseID ? collapseID : '',
+      collapseID: prevState.collapseID !== collapseID ? collapseID : "",
     }))
 
   toggleModal = (showModal) => () =>
     this.setState((prevState) => ({
-      showModal: prevState.showModal !== true ? true : false,
+      showModal: prevState.showModal === true ? false : true,
     }))
 
   setQuantity = (value) => {
-    this.state.quantity = value
+    if (Number.isInteger(parseInt(value))) {
+      this.setState({ quantity: value })
+    }
   }
 
   render() {
     return (
       <div>
-        <Modal
-          size='lg'
-          aria-labelledby='contained-modal-title-vcenter'
+        <MDBModal
           centered
-          show={this.state.showModal}
-          onHide={this.toggleModal(this.state.showModal)}
+          isOpen={this.state.showModal}
+          toggle={this.toggleModal(this.state.showModal)}
         >
-          <Modal.Body>
-            <Image src={this.props.meme.url} thumbnail='true' />
-          </Modal.Body>
-        </Modal>
+          <MDBModalBody>
+            <MDBMedia object src={this.props.meme.url} thumbnail="true" />
+          </MDBModalBody>
+        </MDBModal>
 
-        <MDBContainer className='accordion md-accordion accordion-5'>
-          <MDBCard className='mb-4'>
-            <MDBCollapseHeader className='p-0 z-depth-1' tag='h4'>
-              <div className='d-flex flex-column align-content-around'>
-                <MDBIcon far icon='caret-square-down' />
-                {/* <div
-                  className="d-flex flex-column"
-                  style={{ minWidth: "2em" }}
-                ></div> */}
-                {/* <div className="p-2 mr-auto">{this.props.meme.score}</div> */}
-                <div className='justify-content-between'>
-                  {this.props.meme.score}
-                  {this.props.meme.title}
-                </div>
+        <MDBCard className="mb-4" style={{ width: "77vmin" }}>
+          <MDBCardHeader>
+            <div className="d-flex justify-content-between">
+              <MDBBtn className="z-depth-0">{this.props.meme.score}</MDBBtn>
+              <div className="d-flex align-items-center">
+                {this.props.meme.title}
+              </div>
+              <div id="blankSpaceDontRemoveMe"></div>
+            </div>
+          </MDBCardHeader>
+          <MDBCardBody>
+            <div className="d-flex flex-row">
+              <div className="d-flex justify-content-center">
+                <MDBMedia
+                  object
+                  src={this.props.meme.url}
+                  onClick={this.toggleModal(this.state.showModal)}
+                  style={{ "max-width": "50vmin" }}
+                />
+              </div>
+            </div>
+          </MDBCardBody>
+
+          <MDBCardFooter small={true}>
+            <div
+              className="d-flex justify-content-around align-items-center"
+              style={{ height: "4vh" }}
+            >
+              <div id="buttons">
+                <MDBInput
+                  label="Quantity"
+                  icon="plus-circle"
+                  size="sm"
+                  type="number"
+                  min="0"
+                  style={{ width: "6em" }}
+                  onChange={(e) => {
+                    this.setQuantity(e.target.value)
+                  }}
+                />
+              </div>
+              <div id="buttons">
+                <MDBBtn
+                  color="success"
+                  disabled={
+                    this.state.quantity === "" || this.state.quantity === "0"
+                  }
+                  onClick={() =>
+                    Exchange.transaction(
+                      this.props.action, // either "buy" or "sell"
+                      this.props.meme.name, // memeID
+                      this.state.quantity // how many memes the user wants
+                    )
+                  }
+                >
+                  <MDBIcon icon="shopping-basket" className="mr-1" />
+                  {this.props.action}
+                </MDBBtn>
+              </div>
+            </div>
+          </MDBCardFooter>
+        </MDBCard>
+
+        {/* <MDBContainer className="accordion md-accordion accordion-5">
+          <MDBCard>
+            <div className="d-flex justify-content-start">
+              <div className="p-2 col-example text-left">
                 <Image
                   src={this.props.meme.url}
-                  thumbnail='true'
-                  style={{ 'max-width': '30vh' }}
+                  thumbnail="true"
+                  style={{ "max-width": "4rem", "max-heigt": "4rem" }}
                   onClick={this.toggleModal(this.state.showModal)}
                 />
               </div>
-            </MDBCollapseHeader>
-
-            <MDBCollapse id='collapse' isOpen={this.state.collapseID}>
-              <MDBCardBody className='rgba-black-light white-text z-depth-1'>
-                <div className='d-flex justify-content-around'>
-                  <div className='flex-fill p-2 align-content-center'>
-                    <MDBBtn
-                      color='success'
-                      onClick={Exchange.transaction(
+              <div className="p-2 col-example text-left">
+                <MDBCardBody className="rgba-black-light white-text z-depth-1">
+                  <h4>Value: {this.props.meme.score}</h4>
+                  <MDBBtn
+                    color="success"
+                    disabled={this.state.quantity === 0}
+                    onClick={() =>
+                      Exchange.transaction(
                         this.props.action, // either "buy" or "sell"
                         this.props.meme.name, // memeID
                         this.state.quantity // how many memes the user wants
-                      )}
-                    >
-                      <MDBIcon icon='shopping-basket' className='mr-1' />
-                      {this.props.action}
-                    </MDBBtn>
-                    <MDBInput
-                      label='Quantity'
-                      icon='plus-circle'
-                      size='sm'
-                      style={{ width: '5em' }}
-                      onChange={(e) => this.setQuantity(e.target.value)}
-                    />
-                  </div>
-                </div>
-              </MDBCardBody>
-            </MDBCollapse>
+                      )
+                    }
+                  >
+                    <MDBIcon icon="shopping-basket" className="mr-1" />
+                    {this.props.action}
+                  </MDBBtn>
+                  <MDBInput
+                    label="Quantity"
+                    icon="plus-circle"
+                    size="sm"
+                    style={{ width: "5em" }}
+                    onChange={(e) => this.setQuantity(e.target.value)}
+                  />
+                </MDBCardBody>
+              </div>
+            </div>
           </MDBCard>
-        </MDBContainer>
+        </MDBContainer> */}
       </div>
     )
   }
