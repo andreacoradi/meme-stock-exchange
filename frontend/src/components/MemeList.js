@@ -1,6 +1,6 @@
-import React, { Component } from "react"
-import { Materialcard } from "../components/MaterialCard"
-import axios from "axios"
+import React, { Component } from 'react'
+import { Materialcard } from '../components/MaterialCard'
+import axios from 'axios'
 // import memesJSON from "../assets/memes.json"
 
 const { REACT_APP_DBURI } = process.env
@@ -8,7 +8,7 @@ const { REACT_APP_DBURI } = process.env
 export class MemeList extends Component {
   constructor() {
     super()
-    this.userToken = localStorage.getItem("token") // || REACT_APP_DEVTOKEN
+    this.userToken = localStorage.getItem('token') // || REACT_APP_DEVTOKEN
     // console.log(this.userToken)
     this.state = { memesArray: [] }
   }
@@ -18,16 +18,18 @@ export class MemeList extends Component {
   async componentDidMount() {
     // todo fetch dal db
     await axios
-      .get(REACT_APP_DBURI + "/memes?count=10", {
+      .get(REACT_APP_DBURI + '/memes?count=10', {
         headers: {
-          authorization: "Bearer " + this.userToken,
+          authorization: 'Bearer ' + this.userToken,
         },
       })
       .then((response) => {
         // console.log(response)
         // meme list
         response.data.forEach((meme) => {
-          const card = <Materialcard meme={meme} key={Date.now()} />
+          const card = (
+            <Materialcard meme={meme} action='buy' key={Date.now()} />
+          )
           this.state.memesArray.push(card)
           this.forceUpdate()
         })

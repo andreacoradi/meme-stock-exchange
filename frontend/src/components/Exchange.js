@@ -32,4 +32,4 @@ class Exchange {
   }
 }
 
-export default new Exchange()
+export default Exchange
