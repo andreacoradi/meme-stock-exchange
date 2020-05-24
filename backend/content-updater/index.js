@@ -25,7 +25,8 @@ mysql.createConnection({
     rimuoviMeme.start();
     aggiornaMeme.start();
 }).catch(err => {
-    throw err
+    console.error(err)
+    process.exit(1)
 })
 
 const insertMeme = (m) => {
