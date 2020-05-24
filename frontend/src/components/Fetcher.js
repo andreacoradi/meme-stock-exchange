@@ -1,19 +1,22 @@
 // import React from "react"
-import axios from "axios"
-import Auth from "./auth/Auth"
+import axios from 'axios' // axios bad, fetch gud
 
-const { REACT_APP_DEVTOKEN, REACT_APP_DBURI } = process.env
-const userToken = localStorage.getItem("token") //  || REACT_APP_DEVTOKEN
+const { REACT_APP_DBURI } = process.env
+const userToken = localStorage.getItem('token') //  || REACT_APP_DEVTOKEN
 let memesArray = []
 let rankedUsers = []
 let ownedArray = []
+
+//  I hope somebody is gonna actually use this class ffs
+//  All I need to do is to re-write this but using fetch
+//  instead of axios
 
 const fetchMarket = async (count) => {
   memesArray = []
   await axios
     .get(`${REACT_APP_DBURI}/memes?count=${count}`, {
       headers: {
-        authorization: "Bearer " + userToken,
+        authorization: 'Bearer ' + userToken,
       },
     })
     .then((response) => {
@@ -43,10 +46,10 @@ const fetchOwned = async () => {
   memesArray = []
   await axios
     .get(
-      `${REACT_APP_DBURI}/users/${localStorage.getItem("username")}/portfolio`,
+      `${REACT_APP_DBURI}/users/${localStorage.getItem('username')}/portfolio`,
       {
         headers: {
-          authorization: "Bearer " + userToken,
+          authorization: 'Bearer ' + userToken,
         },
       }
     )
@@ -78,7 +81,7 @@ const fetchRanking = async (count) => {
   await axios
     .get(`${REACT_APP_DBURI}/users?count=${count}`, {
       headers: {
-        authorization: "Bearer " + userToken,
+        authorization: 'Bearer ' + userToken,
       },
     })
     .then((response) => {
@@ -103,17 +106,17 @@ export function Fetcher(type, count) {
   // type: "ranking"
 
   switch (type) {
-    case "market":
+    case 'market':
       fetchMarket(count).then(() => {
         return memesArray
       })
       break
-    case "user_owned":
+    case 'user_owned':
       fetchOwned().then(() => {
         return ownedArray
       })
       break
-    case "ranking":
+    case 'ranking':
       fetchRanking(count).then(() => {
         return rankedUsers
       })
