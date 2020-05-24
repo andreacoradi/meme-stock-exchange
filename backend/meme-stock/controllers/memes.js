@@ -18,7 +18,14 @@ export const handlerGetMeme = async (req, res) => {
     try {
         const memeID = req.params.id
         const meme = await getMeme(memeID)
-        res.send(meme)
+        if(meme.length !== 0) {
+            res.send(meme)
+        } else {
+            res.status(404)
+            res.send({
+                "message": "no meme found"
+            })
+        }
     } catch (error) {
         throw error
     }
@@ -30,7 +37,9 @@ export const handlerExchangeMeme = async (req, res) => {
     const { action, quantity } = req.body
     if(!action || !quantity || !token) {
         res.status(400)
-        res.send("no frah")
+        res.send({
+            "message": "bad request"
+        })
         return
     } 
 
