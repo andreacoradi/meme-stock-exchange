@@ -35,7 +35,7 @@ export const handlerExchangeMeme = async (req, res) => {
     const id = req.params.id
     const token = getToken(req)
     const { action, quantity } = req.body
-    if(!action || !quantity || !token) {
+    if(!action || !quantity || quantity <= 0 || !token) {
         res.status(400)
         res.send({
             "message": "bad request"
