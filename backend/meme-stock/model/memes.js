@@ -1,11 +1,17 @@
 import { database } from "../helper/database.js"
 
 export const getMemes = async (count, page) => {
-    if(!count || !Number.isInteger(count)) {
-        count = 100
+    if(!count) {
+        count = 10
     }
-    if(!page || !Number.isInteger(page)) {
+    if(!page) {
         page = 0
+    }
+
+    const offset = parseInt(page) * parseInt(count)
+
+    if(isNaN(offset)) {
+        offset = 0
     }
 
     const sql = 
@@ -13,7 +19,7 @@ export const getMemes = async (count, page) => {
     FROM memes 
     ORDER BY created_at DESC 
     LIMIT ${count}
-    OFFSET ${page*count}`
+    OFFSET ${offset}`
     
     return database.query(sql)
 }
