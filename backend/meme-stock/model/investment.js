@@ -45,12 +45,12 @@ export const sellMeme = async (memeID, userID, quantita) => {
     return database.query(sql, [memeID, userID])
     .then(result => {
         if(result.length === 0) {
-            throw new Error("non hai azioni di questo meme")
+            throw new Error("Non hai azioni di questo meme")
         }
         const q = result[0].quantita
         let values = []
         if(quantita > q) {
-            throw new Error("non hai abbastanza azioni")
+            throw new Error("Non hai abbastanza azioni")
         } else if (q == quantita) {
             // Se vendo tutto cancello
             sql = 

@@ -9,7 +9,7 @@ export const auth = async (req, res, next) => {
     if(!auth) {
         res.status(401)
         res.send({
-            "message": "authorization is needed"
+            "message": "Authorization is needed"
         })
         return
     }
@@ -18,7 +18,7 @@ export const auth = async (req, res, next) => {
     if(!token) {
         res.status(403)
         res.send({
-            "message": "no token provided"
+            "message": "No token provided"
         })
         return
     }
