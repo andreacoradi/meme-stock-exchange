@@ -88,8 +88,9 @@ const removeFromDB = async (memeID) => {
 
 const removeFromInvestment = async (memeID) => {
     // Metto coin investiti a 0 o elimino il meme??
-    const sql = "UPDATE investment SET coin_investiti = ? WHERE id_meme = ?"
-    return database.query(sql, [0, memeID])
+    // const sql = "UPDATE investment SET coin_investiti = ? WHERE id_meme = ?"
+    const sql = "DELETE FROM investment WHERE id_meme = ?"
+    return database.query(sql, [memeID])
 }
 
 const isInInvestment = async (memeID) => {
@@ -161,6 +162,7 @@ const deleteOldMemes = async () => {
         if(!validImg) {
             console.log("INVALID IMAGE", m.name);
             removeFromDB(m.name)
+            removeFromInvestment(m.name)
             return
         }
 
@@ -181,7 +183,7 @@ const deleteOldMemes = async () => {
 var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Berlin")
 
 // Una volta al giorno alle 8 di mattina
-var rimuoviMeme = new CronJob('0 8 * * *', deleteOldMemes, null, true, "Europe/Berlin")
+var rimuoviMeme = new CronJob('*/15 * * * *', deleteOldMemes, null, true, "Europe/Berlin")
 
 // Ogni 15 minuti
 var aggiornaMeme = new CronJob('*/15 * * * *', updateInvestments, null, true, "Europe/Berlin")
