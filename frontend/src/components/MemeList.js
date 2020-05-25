@@ -1,63 +1,137 @@
-import React, { Component } from 'react'
+import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { Fetcher } from './Fetcher'
 import { Materialcard } from '../components/MaterialCard'
 // import memesJSON from "../assets/memes.json"
 
-export class MemeList extends Component {
-  constructor(props) {
-    super(props)
-    this.userToken = localStorage.getItem('token') // || REACT_APP_DEVTOKEN
-    // console.log(this.userToken)
-    this.state = { memesArray: [] }
-  }
+//  todo: sometimes it load 100+ memes instead of 10
+//  I hope its backend related
 
-  // fetcher -> memelist -> several materialcards
+export function MemeList(props) {
+  const [pageNumber, setPageNumber] = useState(0)
+  const [memesArray, setMemesArray] = useState([])
+  const [lastItem, setlastItem] = useState(null)
 
-  async componentDidMount() {
-    const result = await Fetcher(this.props.requestType, this.props.count)
-
-    result.forEach((meme) => {
-      const card = <Materialcard meme={meme} action='buy' key={Date.now()} />
-      this.state.memesArray.push(card)
-      this.forceUpdate()
+  const observer = useRef(
+    new IntersectionObserver((entries) => {
+      const first = entries[0]
+      // console.log(first)//
+      if (first.isIntersecting) {
+        console.log('reached rock bottom')
+        setPageNumber(pageNumber + 1)
+        console.log(`set pagenumber to ${pageNumber}`)
+      }
     })
+  )
 
-    // only for testing since I have CORS troubles
-    // memesJSON.forEach((meme) => {
-    //   const card = <Materialcard meme={meme} key={Date.now()} />
-    //   this.state.memesArray.push(card)
-    //   this.forceUpdate()
-    // })
+  const fillMemes = async () => {
+    console.log(`Filling ${props.count} memes, we are at page ${pageNumber}`)
+
+    const newResults = await Fetcher(props.requestType, props.count, pageNumber)
+    setMemesArray(memesArray.concat(newResults))
   }
 
-  /*
+  useEffect(() => {
+    const currentElement = lastItem
+    const currentObserver = observer.current
 
-  Example of a meme object
-
-  {
-    "name": "t3_gnhraa",
-    "title": "Im not wrong",
-    "url": "https://i.redd.it/sf9xxljoyyz41.jpg",
-    "subreddit": "dankmemes",
-    "score": 1,
-    "archived": 0,
-    "created_at": 1590001974
-  },
-
-
-  */
-
-  render() {
-    const memesList = this.state.memesArray
-    if (memesList.length === 0) {
-      return null
+    if (currentElement) {
+      currentObserver.observe(currentElement)
     }
-    return (
-      <div>
-        {memesList.map((meme) => {
-          return meme
-        })}
-      </div>
-    )
-  }
+
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement)
+      }
+    }
+  }, [lastItem])
+
+  useEffect(() => {
+    fillMemes()
+  }, [pageNumber])
+
+  return (
+    <div>
+      {memesArray.map((meme, index) => {
+        if (memesArray.length === index + 1) {
+          return (
+            <div ref={setlastItem} id='lastItem'>
+              <Materialcard key={meme.url} meme={meme} action='buy' />
+            </div>
+          )
+        } else return <Materialcard meme={meme} action='buy' key={meme.url} />
+      })}
+    </div>
+  )
 }
+
+// export class MemeList extends Component {
+//   constructor(props) {
+//     super(props)
+//     this.userToken = localStorage.getItem('token') // || REACT_APP_DEVTOKEN
+//     // console.log(this.userToken)
+//     this.state = { memesArray: [] }
+//   }
+
+//   // fetcher -> memelist -> several materialcards
+
+//   async componentDidMount() {
+//     const result = await Fetcher(
+//       this.props.requestType,
+//       this.props.count,
+//       this.state.pageNumber
+//     )
+
+//     result.forEach((meme) => {
+//       // const card = <Materialcard meme={meme} action='buy' key={Date.now()} />
+//       this.state.memesArray.push(meme)
+//       this.forceUpdate()
+//     })
+
+//     // only for testing since I have CORS troubles
+//     // memesJSON.forEach((meme) => {
+//     //   const card = <Materialcard meme={meme} key={Date.now()} />
+//     //   this.state.memesArray.push(card)
+//     //   this.forceUpdate()
+//     // })
+//   }
+
+//   /*
+
+//   Example of a meme object
+
+//   {
+//     "name": "t3_gnhraa",
+//     "title": "Im not wrong",
+//     "url": "https://i.redd.it/sf9xxljoyyz41.jpg",
+//     "subreddit": "dankmemes",
+//     "score": 1,
+//     "archived": 0,
+//     "created_at": 1590001974
+//   },
+
+//   */
+
+//   render() {
+//     const memesList = this.state.memesArray
+//     if (memesList.length === 0) {
+//       return null
+//     }
+//     return (
+//       <div>
+//         {memesList.map((meme, index) => {
+//           if (meme.length === index + 1) {
+//             return (
+//               <Materialcard
+//                 ref={this.lastMemeReference}
+//                 meme={meme}
+//                 action='buy'
+//                 key={Date.now()}
+//               />
+//             )
+//           } else
+//             return <Materialcard meme={meme} action='buy' key={Date.now()} />
+//         })}
+//       </div>
+//     )
+//   }
+// }

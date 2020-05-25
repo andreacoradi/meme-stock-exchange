@@ -10,8 +10,11 @@ let ownedArray = []
 //  All I need to do is to re-write this but using fetch
 //  instead of axios
 
-const fetchMarket = async (count) => {
-  const URL = `${REACT_APP_DBURI}/memes?count=${count}`
+const fetchMarket = async (count, pageNumber) => {
+  const URL = `${REACT_APP_DBURI}/memes?count=${count}&page=${pageNumber}`
+
+  console.log(URL)
+
   await fetch(URL, {
     method: 'GET',
     headers: {
@@ -35,7 +38,9 @@ const fetchRanking = async (count) => {
   // todo
 }
 
-export async function Fetcher(type, count) {
+export async function Fetcher(type, count, pageNumber) {
+  console.log(`Qui parla fetcher: ${count}, ${type}, ${pageNumber}`)
+
   // type: "market"
   // type: "user_owned"
   // type: "ranking"
@@ -45,7 +50,7 @@ export async function Fetcher(type, count) {
   switch (type) {
     case 'market':
       try {
-        await fetchMarket(count)
+        await fetchMarket(count, pageNumber)
         return memesArray
       } catch (error) {
         console.log(error)
