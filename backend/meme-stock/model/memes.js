@@ -1,12 +1,13 @@
 import { database } from "../helper/database.js"
 
 export const getMemes = async (count, page) => {
-    if(!count) {
+    if(!count || !Number.isInteger(count)) {
         count = 100
     }
-    if(!page) {
+    if(!page || !Number.isInteger(page)) {
         page = 0
     }
+
     const sql = 
     `SELECT name, title, url, subreddit, score, archived, created_at 
     FROM memes 
