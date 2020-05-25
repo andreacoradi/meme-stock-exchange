@@ -58,27 +58,27 @@ const updateMeme = (m) => {
     })
 }
 
-const checkIfUnique = (m) => {
-    const sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
+// const checkIfUnique = (m) => {
+//     const sql = "SELECT COUNT(*) as Quanti FROM memes WHERE name = ?"
 
-    database.query(sql, [m.name])
-    .then(result => {
-        if(result[0].Quanti === 0) {
-            insertMeme(m)
-        } else {
-            console.log(m.name + " è gia presente");
-            if(m.archived) {
-                console.log("Vecchio meme! //TODO");
-                throw "Implement"
-            } else {
-                updateMeme(m)
-            }
-        }
-    })
-    .catch(err => {
-        console.error(err)
-    })
-}
+//     database.query(sql, [m.name])
+//     .then(result => {
+//         if(result[0].Quanti === 0) {
+//             insertMeme(m)
+//         } else {
+//             console.log(m.name + " è gia presente");
+//             if(m.archived) {
+//                 console.log("Vecchio meme! //TODO");
+//                 throw "Implement"
+//             } else {
+//                 updateMeme(m)
+//             }
+//         }
+//     })
+//     .catch(err => {
+//         console.error(err)
+//     })
+// }
 
 const removeFromDB = async (memeID) => {
     const sql = "DELETE FROM memes WHERE name = ?"
@@ -106,7 +106,9 @@ const hasValidImage = async (url) => {
 const updateMemeByID = async (memeID) => {
     const result = await fetch(`${API_URL}/api/info.json?id=${memeID}`)
     const json = await result.json()
-    if(json.data.children.length === 0) {
+    if(json.data.dist === 0) {
+        console.log("Meme non esiste", memeID);
+        await removeFromDB(memeID)
         throw new Error("meme non esiste")
     }
     const meme = json.data.children[0].data

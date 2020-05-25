@@ -3,7 +3,7 @@ import { database } from "../helper/database.js"
 export const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
     try {
         let sql = 
-        `SELECT COUNT(*) AS Quanti, quantita, coin_investiti 
+        `SELECT COUNT(id_meme) AS Quanti, quantita, coin_investiti 
         FROM investment 
         WHERE id_meme = ? 
         AND id_utente = ?`
@@ -78,7 +78,8 @@ export const getPortfolio = async (userID) => {
         const sql =
         `SELECT quantita, name, coin_investiti, data_acquisto, title, url, score, subreddit
         FROM investment, memes 
-        WHERE investment.id_meme = memes.name AND id_utente = ?`
+        WHERE investment.id_meme = memes.name 
+        AND id_utente = ?`
         
         return database.query(sql,[userID])
     } catch (error) {

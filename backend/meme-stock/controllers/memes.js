@@ -34,8 +34,11 @@ export const handlerGetMeme = async (req, res) => {
 export const handlerExchangeMeme = async (req, res) => {
     const id = req.params.id
     const token = getToken(req)
-    const { action, quantity } = req.body
-    if(!action || !quantity || quantity <= 0 || !token) {
+    const { action } = req.body
+    
+    const quantity = Number(req.body.quantity)
+
+    if(!action || !quantity || quantity <= 0 || !token || !Number.isInteger(quantity)) {
         res.status(400)
         res.send({
             "message": "bad request"
@@ -78,6 +81,8 @@ export const handlerExchangeMeme = async (req, res) => {
             console.log("Valore investimento", valoreMeme * quantity);
             
             await setCoins(username, userCoins + (valoreMeme * quantity))
+        } else {
+            throw new Error("bad request")
         }
         res.send({
             "message": "si, tutto a posto!"
