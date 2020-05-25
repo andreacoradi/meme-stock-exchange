@@ -1,10 +1,9 @@
-// import React from "react"
-import axios from 'axios' // axios bad, fetch gud
+// axios bad, fetch gud
 
 const { REACT_APP_DBURI } = process.env
 const userToken = localStorage.getItem('token') //  || REACT_APP_DEVTOKEN
 let memesArray = []
-let rankedUsers = []
+let ranked = []
 let ownedArray = []
 
 //  I hope somebody is gonna actually use this class ffs
@@ -12,114 +11,61 @@ let ownedArray = []
 //  instead of axios
 
 const fetchMarket = async (count) => {
-  memesArray = []
-  await axios
-    .get(`${REACT_APP_DBURI}/memes?count=${count}`, {
-      headers: {
-        authorization: 'Bearer ' + userToken,
-      },
-    })
-    .then((response) => {
-      // console.log(response)
-      // meme list
-      response.data.forEach((meme) => {
-        memesArray.push(meme)
-
-        // {
-        //   "name": "t3_gp06l9",
-        //   "title": "You wanna know how I got these scars?",
-        //   "url": "https://i.redd.it/krok4yn5lg051.jpg",
-        //   "subreddit": "dankmemes",
-        //   "score": 2,
-        //   "archived": 0,
-        //   "created_at": 1590215348
-        // }
-      })
-    })
-    .catch((error) => {
-      console.log(error)
+  const URL = `${REACT_APP_DBURI}/memes?count=${count}`
+  await fetch(URL, {
+    method: 'GET',
+    headers: {
+      authorization: 'Bearer ' + userToken,
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      memesArray = data
     })
 }
 
 //todo
 const fetchOwned = async () => {
-  memesArray = []
-  await axios
-    .get(
-      `${REACT_APP_DBURI}/users/${localStorage.getItem('username')}/portfolio`,
-      {
-        headers: {
-          authorization: 'Bearer ' + userToken,
-        },
-      }
-    )
-    .then((response) => {
-      // console.log(response)
-      // meme list
-      response.data.forEach((meme) => {
-        ownedArray.push(meme)
-
-        // {
-        //   "quantita": 1,
-        //   "name": "t3_gnhnug",
-        //   "valore_meme": 9,
-        //   "data_acquisto": "2020-05-22T09:52:48.000Z",
-        //   "title": "WE ARE COMEDY",
-        //   "url": "https://i.redd.it/3abaeluixyz41.png",
-        //   "score": 56,
-        //   "subreddit": "dankmemes"
-        // }
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  ownedArray = []
+  // todo
 }
 
 const fetchRanking = async (count) => {
-  rankedUsers = []
-  await axios
-    .get(`${REACT_APP_DBURI}/users?count=${count}`, {
-      headers: {
-        authorization: 'Bearer ' + userToken,
-      },
-    })
-    .then((response) => {
-      // console.log(response)
-      // meme list
-      response.data.forEach((user) => {
-        rankedUsers.push(user)
-        // {
-        //   "username": "acoradi",
-        //   "coins": 325
-        // }
-      })
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  ranked = []
+  // todo
 }
 
-export function Fetcher(type, count) {
+export async function Fetcher(type, count) {
   // type: "market"
   // type: "user_owned"
   // type: "ranking"
 
+  // console.log(type, count)
+
   switch (type) {
     case 'market':
-      fetchMarket(count).then(() => {
+      try {
+        await fetchMarket(count)
         return memesArray
-      })
+      } catch (error) {
+        console.log(error)
+      }
       break
     case 'user_owned':
-      fetchOwned().then(() => {
+      try {
+        await fetchOwned()
         return ownedArray
-      })
+      } catch (error) {
+        console.log(error)
+      }
       break
     case 'ranking':
-      fetchRanking(count).then(() => {
-        return rankedUsers
-      })
+      try {
+        await fetchRanking(count)
+        return ranked
+      } catch (error) {
+        console.log(error)
+      }
       break
     default:
       break
