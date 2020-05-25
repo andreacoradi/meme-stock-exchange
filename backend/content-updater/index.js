@@ -8,7 +8,7 @@ const MS_IN_A_DAY = 1000*60*60*24
 // Dopo quanti giorni un meme senza investimenti viene eliminato
 const MAX_MEME_AGE = 5
 
-const API_URL = "https://www.reddit.com/r"
+const API_URL = "https://www.reddit.com"
 
 let database
 
@@ -132,7 +132,7 @@ const addMemes = async () => {
     // hot = Lower Risk Lower Gains
     const difficulty = "new"
 
-    const r = await fetch(`${API_URL}/${subreddit}/${difficulty}.json`);
+    const r = await fetch(`${API_URL}/r/${subreddit}/${difficulty}.json`);
     const json = await r.json()
     json.data.children.forEach(meme => {
         // checkIfUnique(meme.data)
