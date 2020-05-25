@@ -113,8 +113,8 @@ const hasValidImage = async (url) => {
 const updateMemeByID = async (memeID) => {
     const result = await fetch(`${API_URL}/api/info.json?id=${memeID}`)
     const json = await result.json()
-    console.log(json);
-    if(json.error) {
+    // console.log(json);
+    if(json.data.dist.length === 0) {
         console.log("Meme non esiste", memeID);
         await removeFromDB(memeID)
         await removeFromInvestment(memeID)
