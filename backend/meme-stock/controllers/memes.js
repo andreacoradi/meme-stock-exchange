@@ -7,7 +7,8 @@ import { getToken, getUsername } from "../helper/utils.js"
 export const handlerGetMemes = async (req, res) => {
     try {
         const count = req.query.count
-        const memes = await getMemes(count)
+        const page = req.query.page
+        const memes = await getMemes(count, page)
         res.send(memes)
     } catch (error) {
         throw error

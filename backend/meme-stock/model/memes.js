@@ -1,14 +1,18 @@
 import { database } from "../helper/database.js"
 
-export const getMemes = async (count) => {
+export const getMemes = async (count, page) => {
     if(!count) {
         count = 100
+    }
+    if(!page) {
+        page = 0
     }
     const sql = 
     `SELECT name, title, url, subreddit, score, archived, created_at 
     FROM memes 
     ORDER BY created_at DESC 
-    LIMIT ${count}`
+    LIMIT ${count}
+    OFFSET ${page*count}`
     
     return database.query(sql)
 }
