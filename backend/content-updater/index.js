@@ -26,6 +26,7 @@ mysql.createPool({
     aggiornaMeme.start();
 
     addMemes()
+    updateInvestments()
 }).catch(err => {
     console.error(err)
     process.exit(1)
@@ -85,6 +86,12 @@ const removeFromDB = async (memeID) => {
     return database.query(sql, [memeID])
 }
 
+const removeFromInvestment = async (memeID) => {
+    // Metto coin investiti a 0 o elimino il meme??
+    const sql = "UPDATE investment SET coin_investiti = ? WHERE id_meme = ?"
+    return database.query(sql, [0, memeID])
+}
+
 const isInInvestment = async (memeID) => {
     const sql = "SELECT COUNT(*) AS Quanti FROM investment WHERE id_meme = ?"
     const result = await database.query(sql, [memeID])
@@ -106,10 +113,13 @@ const hasValidImage = async (url) => {
 const updateMemeByID = async (memeID) => {
     const result = await fetch(`${API_URL}/api/info.json?id=${memeID}`)
     const json = await result.json()
-    if(json.data.dist === 0) {
+    console.log(json);
+    if(json.error) {
         console.log("Meme non esiste", memeID);
         await removeFromDB(memeID)
-        throw new Error("meme non esiste")
+        await removeFromInvestment(memeID)
+        //throw new Error("meme non esiste")
+        return
     }
     const meme = json.data.children[0].data
     updateMeme(meme)
