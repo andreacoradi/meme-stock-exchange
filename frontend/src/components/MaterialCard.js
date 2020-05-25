@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import {
   MDBCard,
   // MDBCardTitle,
@@ -19,23 +19,23 @@ import {
   // MDBCardText,
   MDBModal,
   MDBModalBody,
-} from "mdbreact"
+} from 'mdbreact'
 
-import Exchange from "./Exchange"
+import Exchange from './Exchange'
 
 export class Materialcard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      collapseID: "",
+      collapseID: '',
       showModal: false,
-      quantity: "",
+      quantity: '',
     }
   }
 
   toggleCollapse = (collapseID) => () =>
     this.setState((prevState) => ({
-      collapseID: prevState.collapseID !== collapseID ? collapseID : "",
+      collapseID: prevState.collapseID !== collapseID ? collapseID : '',
     }))
 
   toggleModal = (showModal) => () =>
@@ -58,28 +58,28 @@ export class Materialcard extends Component {
           toggle={this.toggleModal(this.state.showModal)}
         >
           <MDBModalBody>
-            <MDBMedia object src={this.props.meme.url} thumbnail="true" />
+            <MDBMedia object src={this.props.meme.url} thumbnail={true} />
           </MDBModalBody>
         </MDBModal>
 
-        <MDBCard className="mb-4" style={{ width: "77vmin" }}>
+        <MDBCard className='mb-4' style={{ width: '77vmin' }}>
           <MDBCardHeader>
-            <div className="d-flex justify-content-between">
-              <MDBBtn className="z-depth-0">{this.props.meme.score}</MDBBtn>
-              <div className="d-flex align-items-center">
+            <div className='d-flex justify-content-between'>
+              <MDBBtn className='z-depth-0'>{this.props.meme.score}</MDBBtn>
+              <div className='d-flex align-items-center'>
                 {this.props.meme.title}
               </div>
-              <div id="blankSpaceDontRemoveMe"></div>
+              <div id='blankSpaceDontRemoveMe'></div>
             </div>
           </MDBCardHeader>
           <MDBCardBody>
-            <div className="d-flex flex-row">
-              <div className="d-flex justify-content-center">
+            <div className='d-flex flex-row'>
+              <div className='d-flex justify-content-center'>
                 <MDBMedia
                   object
                   src={this.props.meme.url}
                   onClick={this.toggleModal(this.state.showModal)}
-                  style={{ "max-width": "50vmin" }}
+                  style={{ maxWidth: '50vmin' }}
                 />
               </div>
             </div>
@@ -87,27 +87,27 @@ export class Materialcard extends Component {
 
           <MDBCardFooter small={true}>
             <div
-              className="d-flex justify-content-around align-items-center"
-              style={{ height: "4vh" }}
+              className='d-flex justify-content-around align-items-center'
+              style={{ height: '4vh' }}
             >
-              <div id="buttons">
+              <div id='buttons'>
                 <MDBInput
-                  label="Quantity"
-                  icon="plus-circle"
-                  size="sm"
-                  type="number"
-                  min="0"
-                  style={{ width: "6em" }}
+                  label='Quantity'
+                  icon='plus-circle'
+                  size='sm'
+                  type='number'
+                  min='0'
+                  style={{ width: '6em' }}
                   onChange={(e) => {
                     this.setQuantity(e.target.value)
                   }}
                 />
               </div>
-              <div id="buttons">
+              <div id='buttons'>
                 <MDBBtn
-                  color="success"
+                  color='success'
                   disabled={
-                    this.state.quantity === "" || this.state.quantity === "0"
+                    this.state.quantity === '' || this.state.quantity === '0'
                   }
                   onClick={() =>
                     Exchange.transaction(
@@ -117,7 +117,7 @@ export class Materialcard extends Component {
                     )
                   }
                 >
-                  <MDBIcon icon="shopping-basket" className="mr-1" />
+                  <MDBIcon icon='shopping-basket' className='mr-1' />
                   {this.props.action}
                 </MDBBtn>
               </div>

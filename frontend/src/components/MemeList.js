@@ -1,14 +1,12 @@
-import React, { Component } from "react"
-import { Materialcard } from "../components/MaterialCard"
-import axios from "axios"
+import React, { Component } from 'react'
+import { Fetcher } from './Fetcher'
+import { Materialcard } from '../components/MaterialCard'
 // import memesJSON from "../assets/memes.json"
 
-const { REACT_APP_DBURI } = process.env
-
 export class MemeList extends Component {
-  constructor() {
-    super()
-    this.userToken = localStorage.getItem("token") // || REACT_APP_DEVTOKEN
+  constructor(props) {
+    super(props)
+    this.userToken = localStorage.getItem('token') // || REACT_APP_DEVTOKEN
     // console.log(this.userToken)
     this.state = { memesArray: [] }
   }
@@ -16,27 +14,14 @@ export class MemeList extends Component {
   // fetcher -> memelist -> several materialcards
 
   async componentDidMount() {
-    // todo fetch dal db
-    await axios
-      .get(REACT_APP_DBURI + "/memes?count=10", {
-        headers: {
-          authorization: "Bearer " + this.userToken,
-        },
-      })
-      .then((response) => {
-        // console.log(response)
-        // meme list
-        response.data.forEach((meme) => {
-          const card = (
-            <Materialcard meme={meme} action="buy" key={Date.now()} />
-          )
-          this.state.memesArray.push(card)
-          this.forceUpdate()
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const result = await Fetcher(this.props.requestType, this.props.count)
+
+    result.forEach((meme) => {
+      const card = <Materialcard meme={meme} key={Date.now()} />
+      this.state.memesArray.push(card)
+      this.forceUpdate()
+    })
+
     // only for testing since I have CORS troubles
     // memesJSON.forEach((meme) => {
     //   const card = <Materialcard meme={meme} key={Date.now()} />
