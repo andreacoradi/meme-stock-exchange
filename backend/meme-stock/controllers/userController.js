@@ -9,7 +9,7 @@ export const handlerGetUserPortfolio = async(req, res) => {
     if(username !== tokenUsername) {
         res.status(400)
         res.send({
-            "message": "token does not match"
+            "message": "Token does not match"
         })
         return
     }

@@ -24,7 +24,7 @@ export const handlerGetMeme = async (req, res) => {
         } else {
             res.status(404)
             res.send({
-                "message": "no meme found"
+                "message": "No meme found"
             })
         }
     } catch (error) {
@@ -42,7 +42,7 @@ export const handlerExchangeMeme = async (req, res) => {
     if(!action || !quantity || quantity <= 0 || !token || !Number.isInteger(quantity)) {
         res.status(400)
         res.send({
-            "message": "bad request"
+            "message": "Bad request"
         })
         return
     } 
@@ -54,7 +54,7 @@ export const handlerExchangeMeme = async (req, res) => {
 
         if(userID.length === 0) {
             res.send({
-                "message": "no user found"
+                "message": "No user found"
             })
             return
         }
@@ -64,7 +64,7 @@ export const handlerExchangeMeme = async (req, res) => {
         let valoreMeme = (await getMemeValue(id))
 
         if (valoreMeme.length === 0) {
-            throw new Error("meme non trovato")
+            throw new Error("Meme non trovato")
         }
 
         valoreMeme = valoreMeme[0].score
@@ -73,7 +73,7 @@ export const handlerExchangeMeme = async (req, res) => {
         
         if(action === "buy") {
             if(userCoins < valoreMeme * quantity) {
-                throw new Error("not enough coins")
+                throw new Error("Not enough coins")
             }
             await buyMeme(id, valoreMeme, userID, quantity)
             await setCoins(username, userCoins - (valoreMeme * quantity))
@@ -83,10 +83,10 @@ export const handlerExchangeMeme = async (req, res) => {
             
             await setCoins(username, userCoins + (valoreMeme * quantity))
         } else {
-            throw new Error("bad request")
+            throw new Error("Bad request")
         }
         res.send({
-            "message": "si, tutto a posto!"
+            "message": "Successful"
         })
     } catch (error) {
         console.error(error);
