@@ -17,7 +17,7 @@ export class MemeList extends Component {
     const result = await Fetcher(this.props.requestType, this.props.count)
 
     result.forEach((meme) => {
-      const card = <Materialcard meme={meme} key={Date.now()} />
+      const card = <Materialcard meme={meme} action='buy' key={Date.now()} />
       this.state.memesArray.push(card)
       this.forceUpdate()
     })
