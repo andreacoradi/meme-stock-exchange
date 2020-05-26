@@ -1,13 +1,13 @@
-import React, { useState } from "react"
-import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap"
-import "./style/Login.css"
-import Auth from "./auth/Auth"
+import React, { useState } from 'react'
+import { Button, FormGroup, FormControl, FormLabel } from 'react-bootstrap'
+import './style/Login.css'
+import Auth from './auth/Auth'
 
-export default function Signup(props) {
+export function Signup(props) {
   //   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [username, setUsername] = useState('')
 
   function validateForm() {
     return (
@@ -21,23 +21,23 @@ export default function Signup(props) {
     Auth.signup(
       credentials,
       () => {
-        props.history.push("/market")
+        props.history.push('/market')
       },
       () => {
-        console.log("Wrong credentials")
-        alert("Credenziali errate, prego riprovare")
+        console.log('Wrong credentials')
+        alert('Credenziali errate, prego riprovare')
       }
     )
   }
 
   return (
-    <div className="Login">
+    <div className='Login'>
       <form onSubmit={handleSubmit}>
-        <FormGroup controlId="username">
+        <FormGroup controlId='username'>
           <FormLabel>Username</FormLabel>
           <FormControl
             autoFocus
-            type="username"
+            type='username'
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
@@ -51,23 +51,23 @@ export default function Signup(props) {
             onChange={(e) => setEmail(e.target.value)}
           />
         </FormGroup> */}
-        <FormGroup controlId="password">
+        <FormGroup controlId='password'>
           <FormLabel>Password</FormLabel>
           <FormControl
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            type="password"
+            type='password'
           />
         </FormGroup>
-        <FormGroup controlId="passwordConfirm">
+        <FormGroup controlId='passwordConfirm'>
           <FormLabel>Confirm Password</FormLabel>
           <FormControl
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            type="password"
+            type='password'
           />
         </FormGroup>
-        <Button block disabled={!validateForm()} type="submit">
+        <Button block disabled={!validateForm()} type='submit'>
           Register
         </Button>
       </form>

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react"
+import React from 'react'
 // import { Link } from "react-router-dom"
-import { Nav, Navbar } from "react-bootstrap"
-import Auth from "./auth/Auth"
-import styled from "styled-components"
-import logo from "../assets/profile.png"
-import { MDBBtn } from "mdbreact"
-import { Fetcher } from "./Fetcher"
+import { Nav, Navbar } from 'react-bootstrap'
+import Auth from './auth/Auth'
+import styled from 'styled-components'
+import logo from '../assets/profile.png'
+import { MDBBtn } from 'mdbreact'
+import { useStoreState } from 'easy-peasy'
 
 const Styles = styled.div`
   .profile {
@@ -23,48 +23,42 @@ const Styles = styled.div`
 `
 
 export function NavigationBar(props) {
-  const username = localStorage.getItem("username")
-
-  //  todo: dynamic coins label
-
-  const [coins, setCoins] = useState(420) // ( ͡° ͜ʖ ͡°)
-
-  useEffect(async () => {
-    // setCoins(await Fetcher("coins"))
-  }, [coins])
+  const username = localStorage.getItem('username')
+  const coins = useStoreState((state) => state.coinCount)
+  console.log(coins)
 
   return (
     <div>
       <Styles>
-        <Navbar expand="true" bg="dark" variant="dark">
+        <Navbar expand='true' bg='dark' variant='dark'>
           {/* <Navbar.Brand href="/">MemExchange</Navbar.Brand> */}
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Nav.Item>
-            <Navbar.Brand href="">MemeExchange</Navbar.Brand>
+            <Navbar.Brand href=''>MemeExchange</Navbar.Brand>
           </Nav.Item>
-
+          {coins}
           <Nav.Item>
-            <MDBBtn color="success" outline className="z-depth-0">
-              ${coins}
+            <MDBBtn color='success' outline className='z-depth-0'>
+              {/* ${coins} */}
             </MDBBtn>
-            <a href="/login">
-              <img className="profile" src={logo} alt="" />
+            <a href='/login'>
+              <img className='profile' src={logo} alt='' />
             </a>
           </Nav.Item>
           <Navbar.Collapse>
-            <Nav className="mr-auto">
-              <Nav.Link>{username ? `Hi ${username}` : "Hi user"}</Nav.Link>
-              <Nav.Link href="/vault">My Memes</Nav.Link>
-              <Nav.Link href="/market">Market</Nav.Link>
-              <Nav.Link href="/ranking">Rating</Nav.Link>
+            <Nav className='mr-auto'>
+              <Nav.Link>{username ? `Hi ${username}` : 'Hi user'}</Nav.Link>
+              <Nav.Link href='/vault'>My Memes</Nav.Link>
+              <Nav.Link href='/market'>Market</Nav.Link>
+              <Nav.Link href='/ranking'>Rating</Nav.Link>
               <Nav.Link
-                href="/"
+                href='/'
                 onClick={() => {
                   Auth.logout(() => {
-                    console.log("User disconnected")
+                    console.log('User disconnected')
                   })
                 }}
-                to="/"
+                to='/'
               >
                 Logout
               </Nav.Link>

@@ -1,10 +1,8 @@
 // axios bad, fetch gud
 
 const { REACT_APP_DBURI } = process.env
-const userToken = localStorage.getItem("token") //  || REACT_APP_DEVTOKEN
-const username = localStorage.getItem("username")
-let ranked = []
-let ownedArray = []
+const userToken = localStorage.getItem('token') //  || REACT_APP_DEVTOKEN
+const username = localStorage.getItem('username')
 
 //  I hope somebody is gonna actually use this class ffs
 //  All I need to do is to re-write this but using fetch
@@ -14,12 +12,12 @@ let ownedArray = []
 const fetchMarket = async (count, pageNumber) => {
   const URL = `${REACT_APP_DBURI}/memes?count=${count}&page=${pageNumber}`
 
-  console.log(URL)
+  // console.log(URL)
 
   return await fetch(URL, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      authorization: "Bearer " + userToken,
+      authorization: 'Bearer ' + userToken,
     },
   })
     .then((response) => response.json())
@@ -32,12 +30,12 @@ const fetchMarket = async (count, pageNumber) => {
 const fetchOwned = async () => {
   const URL = `${REACT_APP_DBURI}/users/${username}/portfolio`
 
-  console.log(URL)
+  // console.log(URL)
 
   return await fetch(URL, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      authorization: "Bearer " + userToken,
+      authorization: 'Bearer ' + userToken,
     },
   })
     .then((response) => {
@@ -52,16 +50,15 @@ const fetchOwned = async () => {
 }
 
 const fetchRanking = async (count) => {
-  ranked = []
   // todo
 }
 
 const fetchCoinsAmount = async () => {
   const URL = `${REACT_APP_DBURI}/users/${username}`
   return await fetch(URL, {
-    method: "GET",
+    method: 'GET',
     headers: {
-      authorization: "Bearer " + userToken,
+      authorization: 'Bearer ' + userToken,
     },
   })
     .then((response) => {
@@ -75,7 +72,7 @@ const fetchCoinsAmount = async () => {
 }
 
 export async function Fetcher(type, count, pageNumber) {
-  console.log(`Qui parla fetcher: ${count}, ${type}, ${pageNumber}`)
+  // console.log(`Qui parla fetcher: ${count}, ${type}, ${pageNumber}`)
 
   // type: "market"
   // type: "user_owned"
@@ -84,35 +81,35 @@ export async function Fetcher(type, count, pageNumber) {
   // console.log(type, count)
 
   switch (type) {
-    case "market":
+    case 'market':
       try {
         return await fetchMarket(count, pageNumber)
       } catch (error) {
         console.log(error)
       }
       break
-    case "user_owned":
+    case 'user_owned':
       try {
         return await fetchOwned()
       } catch (error) {
         console.log(error)
       }
       break
-    case "ranking":
+    case 'ranking':
       try {
-        await fetchRanking(count)
-        return ranked
+        return await fetchRanking(count)
       } catch (error) {
         console.log(error)
       }
       break
 
-    case "coins":
+    case 'coins':
       try {
         return await fetchCoinsAmount()
       } catch (error) {
         console.log(error)
       }
+      break
     default:
       break
   }

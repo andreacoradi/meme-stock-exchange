@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from "react"
-import { Fetcher } from "./Fetcher"
-import { Materialcard } from "../components/MaterialCard"
+import React, { useRef, useState, useEffect } from 'react'
+import { Fetcher } from './Fetcher'
+import { Materialcard } from '../components/MaterialCard'
 // import memesJSON from "../assets/memes.json"
 
 //  todo: sometimes it load 100+ memes instead of 10
@@ -14,13 +14,7 @@ export function MemeList(props) {
   const observer = useRef(
     new IntersectionObserver((entries) => {
       const first = entries[0]
-      // console.log(first)//
-      if (first.isIntersecting) {
-        console.log("reached rock bottom")
-        console.log(`Before incremento it was ${pageNumber}`)
-        setPageNumber(pageNumber + 1)
-        console.log(`set pagenumber to ${pageNumber}`)
-      }
+      if (first.isIntersecting) setPageNumber(pageNumber + 1)
     })
   )
 
@@ -48,18 +42,18 @@ export function MemeList(props) {
 
   useEffect(() => {
     fillMemes()
-  }, [])
+  }, [pageNumber])
 
   return (
     <div>
       {memesArray.map((meme, index) => {
         if (memesArray.length === index + 1) {
           return (
-            <div ref={setlastItem} id="lastItem">
-              <Materialcard key={meme.url} meme={meme} action="buy" />
+            <div ref={setlastItem} key={meme.url}>
+              <Materialcard key={meme.url} meme={meme} action='buy' />
             </div>
           )
-        } else return <Materialcard meme={meme} action="buy" key={meme.url} />
+        } else return <Materialcard meme={meme} action='buy' key={meme.url} />
       })}
     </div>
   )
