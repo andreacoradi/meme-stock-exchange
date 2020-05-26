@@ -36,10 +36,9 @@ export function NavigationBar(props) {
           <Nav.Item>
             <Navbar.Brand href=''>MemeExchange</Navbar.Brand>
           </Nav.Item>
-          {coins}
           <Nav.Item>
             <MDBBtn color='success' outline className='z-depth-0'>
-              {/* ${coins} */}
+              ${coins}
             </MDBBtn>
             <a href='/login'>
               <img className='profile' src={logo} alt='' />
