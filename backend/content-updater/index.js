@@ -25,8 +25,9 @@ mysql.createPool({
     rimuoviMeme.start();
     aggiornaMeme.start();
 
-    addMemes()
-    updateInvestments()
+    // addMemes()
+    // updateInvestments()
+    deleteOldMemes()
 }).catch(err => {
     console.error(err)
     process.exit(1)
@@ -103,15 +104,8 @@ const isInInvestment = async (memeID) => {
 }
 
 const hasValidImage = async (url) => {
-    try {
-        const result = await fetch(url)
-        return result.status !== 404
-    } catch (error) {
-        console.error(error)
-        if(error.code === "ETIMEDOUT") {
-            return true
-        }
-    }
+    const result = await fetch(url)
+    return result.status < 400
 }
 
 const updateMemeByID = async (memeID) => {
@@ -121,7 +115,7 @@ const updateMemeByID = async (memeID) => {
     if(json.data.dist.length === 0) {
         console.log("Meme non esiste", memeID);
         await removeFromDB(memeID)
-        // await removeFromInvestment(memeID)
+        await removeFromInvestment(memeID)
         //throw new Error("meme non esiste")
         return
     }
@@ -160,13 +154,25 @@ const deleteOldMemes = async () => {
     const sql = "SELECT name, created_at, url FROM memes"
     const result = await database.query(sql)
     console.log(result.length);
-    result.forEach(async m => {
-        const validImg = await hasValidImage(m.url)
+    for(let i=0; i<result.length; i++) {
+        const m = result[i]
+
+        let validImg
+        try{
+            validImg = await hasValidImage(m.url)
+        } catch (error) {
+            console.error(error.code)
+            if(error.code === "ETIMEDOUT") {
+                console.log("esco e basta aggiornare");
+                return
+            }
+        }
+        
         if(!validImg) {
             console.log("INVALID IMAGE", m.name);
             removeFromDB(m.name)
-            // removeFromInvestment(m.name)
-            return
+            removeFromInvestment(m.name)
+            continue
         }
 
         // Converto in millisecondi
@@ -177,16 +183,17 @@ const deleteOldMemes = async () => {
         const deltaGiorni = Math.floor(deltaMs / MS_IN_A_DAY)
 
         if(deltaGiorni > MAX_MEME_AGE) {
+            console.log("TOO OLD");
             isInInvestment(m.name)
         }
-    })
+    }
 }
 
 // Ogni 30 minuti
 var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Berlin")
 
-// Una volta al giorno alle 8 di mattina
-var rimuoviMeme = new CronJob('*/15 * * * *', deleteOldMemes, null, true, "Europe/Berlin")
+// Ogni ora
+var rimuoviMeme = new CronJob('0 * * * *', deleteOldMemes, null, true, "Europe/Berlin")
 
 // Ogni 15 minuti
 var aggiornaMeme = new CronJob('*/15 * * * *', updateInvestments, null, true, "Europe/Berlin")
