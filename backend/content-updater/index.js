@@ -108,6 +108,9 @@ const hasValidImage = async (url) => {
         return result.status !== 404
     } catch (error) {
         console.error(error)
+        if(error.code === "ETIMEDOUT") {
+            return true
+        }
     }
 }
 
