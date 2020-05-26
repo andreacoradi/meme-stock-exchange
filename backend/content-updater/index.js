@@ -121,7 +121,7 @@ const updateMemeByID = async (memeID) => {
     if(json.data.dist.length === 0) {
         console.log("Meme non esiste", memeID);
         await removeFromDB(memeID)
-        await removeFromInvestment(memeID)
+        // await removeFromInvestment(memeID)
         //throw new Error("meme non esiste")
         return
     }
@@ -165,7 +165,7 @@ const deleteOldMemes = async () => {
         if(!validImg) {
             console.log("INVALID IMAGE", m.name);
             removeFromDB(m.name)
-            removeFromInvestment(m.name)
+            // removeFromInvestment(m.name)
             return
         }
 
