@@ -50,6 +50,17 @@ export class Materialcard extends Component {
   }
 
   render() {
+    let media = <MDBMedia
+      object
+      src={this.props.meme.url}
+      onClick={this.toggleModal(this.state.showModal)}
+      style={{ maxWidth: '100%', maxHeight: 'auto' }}
+    />
+
+    if (this.props.meme.url.endsWith(".mp4")) {
+      media = <video src={this.props.meme.url} controls autoPlay style={{maxWidth: "100%"}}/>
+    }
+
     return (
       <div>
         <MDBModal
@@ -62,7 +73,7 @@ export class Materialcard extends Component {
           </MDBModalBody>
         </MDBModal>
 
-        <MDBCard className='mb-4' style={{ width: '77vmin' }}>
+        <MDBCard className='mx-auto w-50 mb-5 text-center' style={{ width: '30%' }}>
           <MDBCardHeader>
             <div className='d-flex justify-content-between'>
               <MDBBtn className='z-depth-0'>{this.props.meme.score}</MDBBtn>
@@ -75,12 +86,7 @@ export class Materialcard extends Component {
           <MDBCardBody>
             <div className='d-flex flex-row'>
               <div className='d-flex justify-content-center'>
-                <MDBMedia
-                  object
-                  src={this.props.meme.url}
-                  onClick={this.toggleModal(this.state.showModal)}
-                  style={{ maxWidth: '50vmin' }}
-                />
+                  {media}
               </div>
             </div>
           </MDBCardBody>
@@ -88,16 +94,14 @@ export class Materialcard extends Component {
           <MDBCardFooter small={true}>
             <div
               className='d-flex justify-content-around align-items-center'
-              style={{ height: '4vh' }}
             >
               <div id='buttons'>
                 <MDBInput
                   label='Quantity'
-                  icon='plus-circle'
+                  // icon='plus-circle'
                   size='sm'
                   type='number'
                   min='0'
-                  style={{ width: '6em' }}
                   onChange={(e) => {
                     this.setQuantity(e.target.value)
                   }}
@@ -107,7 +111,7 @@ export class Materialcard extends Component {
                 <MDBBtn
                   color='success'
                   disabled={
-                    this.state.quantity === '' || this.state.quantity === '0'
+                    this.state.quantity <= 0 || this.state.quantity === undefined
                   }
                   onClick={() =>
                     Exchange.transaction(

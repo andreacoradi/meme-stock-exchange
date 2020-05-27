@@ -47,6 +47,10 @@ export function MemeList(props) {
   return (
     <div>
       {memesArray.map((meme, index) => {
+        if(meme.url.endsWith(".gifv")){
+          console.log("eccolo!");
+          meme.url = meme.url.replace('.gifv', '.mp4');
+        }
         if (memesArray.length === index + 1) {
           return (
             <div ref={setlastItem} key={meme.url}>
