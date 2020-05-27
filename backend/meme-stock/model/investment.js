@@ -34,9 +34,9 @@ export const buyMeme = async (memeID, valoreMeme, userID, quantita) => {
     }
 }
 
-export const sellMeme = async (memeID, userID, quantita) => {
+export const sellMeme = async (memeID, valoreMeme, userID, quantita) => {
     let sql = 
-    `SELECT quantita 
+    `SELECT quantita, coin_investiti
     FROM investment 
     WHERE id_meme = ? 
     AND id_utente = ?`
@@ -47,11 +47,12 @@ export const sellMeme = async (memeID, userID, quantita) => {
         if(result.length === 0) {
             throw new Error("Non hai azioni di questo meme")
         }
-        const q = result[0].quantita
+        const quantita_azioni = result[0].quantita
+        const coin_investiti = result[0].coin_investiti
         let values = []
-        if(quantita > q) {
+        if(quantita > quantita_azioni) {
             throw new Error("Non hai abbastanza azioni")
-        } else if (q == quantita) {
+        } else if (quantita_azioni == quantita) {
             // Se vendo tutto cancello
             sql = 
             `DELETE FROM investment 
@@ -63,11 +64,12 @@ export const sellMeme = async (memeID, userID, quantita) => {
             // Vado a sottrarre la quantita
             sql = 
             `UPDATE investment 
-            SET quantita = ? 
+            SET quantita = ?,
+            coin_investiti = ? 
             WHERE id_meme = ? 
             AND id_utente = ?`
 
-            values = [q-quantita,memeID, userID]
+            values = [quantita_azioni - quantita, coin_investiti - valoreMeme, memeID, userID]
         }
         database.query(sql, values)
     })

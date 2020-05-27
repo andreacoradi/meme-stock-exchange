@@ -78,7 +78,7 @@ export const handlerExchangeMeme = async (req, res) => {
             await buyMeme(id, valoreMeme, userID, quantity)
             await setCoins(username, userCoins - (valoreMeme * quantity))
         } else if (action === "sell") {
-            await sellMeme(id, userID, quantity)
+            await sellMeme(id, valoreMeme, userID, quantity)
             console.log("Valore investimento", valoreMeme * quantity);
             
             await setCoins(username, userCoins + (valoreMeme * quantity))
