@@ -1,8 +1,8 @@
 // axios bad, fetch gud
 
 const { REACT_APP_DBURI } = process.env
-const userToken = localStorage.getItem('token') //  || REACT_APP_DEVTOKEN
-const username = localStorage.getItem('username')
+const userToken = localStorage.getItem("token") //  || REACT_APP_DEVTOKEN
+const username = localStorage.getItem("username")
 
 //  I hope somebody is gonna actually use this class ffs
 //  All I need to do is to re-write this but using fetch
@@ -15,9 +15,9 @@ const fetchMarket = async (count, pageNumber) => {
   // console.log(URL)
 
   return await fetch(URL, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      authorization: 'Bearer ' + userToken,
+      authorization: "Bearer " + userToken,
     },
   })
     .then((response) => response.json())
@@ -33,9 +33,9 @@ const fetchOwned = async () => {
   // console.log(URL)
 
   return await fetch(URL, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      authorization: 'Bearer ' + userToken,
+      authorization: "Bearer " + userToken,
     },
   })
     .then((response) => {
@@ -56,9 +56,9 @@ const fetchRanking = async (count) => {
 const fetchCoinsAmount = async () => {
   const URL = `${REACT_APP_DBURI}/users/${username}`
   return await fetch(URL, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      authorization: 'Bearer ' + userToken,
+      authorization: "Bearer " + userToken,
     },
   })
     .then((response) => {
@@ -81,21 +81,21 @@ export async function Fetcher(type, count, pageNumber) {
   // console.log(type, count)
 
   switch (type) {
-    case 'market':
+    case "market":
       try {
         return await fetchMarket(count, pageNumber)
       } catch (error) {
         console.log(error)
       }
       break
-    case 'user_owned':
+    case "user_owned":
       try {
         return await fetchOwned()
       } catch (error) {
         console.log(error)
       }
       break
-    case 'ranking':
+    case "ranking":
       try {
         return await fetchRanking(count)
       } catch (error) {
@@ -103,7 +103,7 @@ export async function Fetcher(type, count, pageNumber) {
       }
       break
 
-    case 'coins':
+    case "coins":
       try {
         return await fetchCoinsAmount()
       } catch (error) {

@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { Fetcher } from './Fetcher'
-import { Materialcard } from '../components/MaterialCard'
+import React, { useRef, useState, useEffect } from "react"
+import { Redirect } from "react-router-dom"
+import { Fetcher } from "./Fetcher"
+import { Materialcard } from "../components/MaterialCard"
 // import memesJSON from "../assets/memes.json"
 
 //  todo: sometimes it load 100+ memes instead of 10
@@ -23,6 +24,12 @@ export function MemeList(props) {
     const newResults = await Fetcher(props.requestType, props.count, pageNumber)
     setMemesArray(memesArray.concat(newResults))
     // setMemesArray([...memesArray, ...newResults])
+    if (memesArray.length === 0) {
+      console.log("No vez, logga", memesArray.length)
+      // localStorage.clear
+
+      return <Redirect to="/login" />
+    }
   }
 
   useEffect(() => {
@@ -47,17 +54,31 @@ export function MemeList(props) {
   return (
     <div>
       {memesArray.map((meme, index) => {
-        if(meme.url.endsWith(".gifv")){
-          console.log("eccolo!");
-          meme.url = meme.url.replace('.gifv', '.mp4');
+        if (meme.url.endsWith(".gifv")) {
+          console.log("eccolo!")
+          meme.url = meme.url.replace(".gifv", ".mp4")
         }
-        if (memesArray.length === index + 1) {
+
+        if (memesArray.length === index + 1 && props.scroll) {
           return (
             <div ref={setlastItem} key={meme.url}>
-              <Materialcard key={meme.url} meme={meme} action='buy' />
+              <Materialcard
+                key={meme.url}
+                meme={meme}
+                action="buy"
+                sell={props.sell}
+              />
             </div>
           )
-        } else return <Materialcard meme={meme} action='buy' key={meme.url} />
+        } else
+          return (
+            <Materialcard
+              meme={meme}
+              action="buy"
+              key={meme.url}
+              sell={props.sell}
+            />
+          )
       })}
     </div>
   )
