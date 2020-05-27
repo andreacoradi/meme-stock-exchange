@@ -83,6 +83,7 @@ const updateMeme = (m) => {
 // }
 
 const removeFromDB = async (memeID) => {
+    console.log("RIMUOVO DAL DB", memeID);
     const sql = "DELETE FROM memes WHERE name = ?"
     return database.query(sql, [memeID])
 }
@@ -90,6 +91,7 @@ const removeFromDB = async (memeID) => {
 const removeFromInvestment = async (memeID) => {
     // Metto coin investiti a 0 o elimino il meme??
     // const sql = "UPDATE investment SET coin_investiti = ? WHERE id_meme = ?"
+    console.log("RIMUOVO DA INVESTIMENTI", memeID);
     const sql = "DELETE FROM investment WHERE id_meme = ?"
     return database.query(sql, [memeID])
 }
