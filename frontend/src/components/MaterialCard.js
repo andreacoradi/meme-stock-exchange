@@ -107,9 +107,9 @@ export class Materialcard extends Component {
       if (increment === 0) color = "bg-warning"
       else if (increment < 0) color = "bg-danger"
 
-      scoreBtn = <MDBBtn className={color}>{numeral(increment).format("Oa")}%</MDBBtn>
+      scoreBtn = <MDBBtn className={color}>{numeral(increment).format("0.00a")}%</MDBBtn>
       actionsBtn = (
-        <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("Oa")} azioni</MDBBtn>
+        <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("0a")} azioni</MDBBtn>
       )
     }
 
@@ -129,13 +129,18 @@ export class Materialcard extends Component {
         <MDBCard className="mx-auto mb-5 text-center">
           <MDBCardHeader>
             <div className="d-flex justify-content-between">
-              <div className="d-flex align-items-left">{scoreBtn}</div>
+              <div className="d-flex align-items-left">
+                {scoreBtn}           
+                </div>
               <div className="d-flex align-items-center">
                 {this.props.meme.title.length < 25
                   ? this.props.meme.title
                   : this.props.meme.title.substring(0, 24) + "..."}
               </div>
-              <div className="d-flex align-items-right">{actionsBtn}</div>
+              <div className="d-flex align-items-right">
+                {/* ADD TOOLTIP */}
+                {actionsBtn}
+              </div>
             </div>
           </MDBCardHeader>
           <MDBCardBody>

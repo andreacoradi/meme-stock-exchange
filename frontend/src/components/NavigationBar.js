@@ -58,7 +58,7 @@ export function NavigationBar(props) {
             <MDBTooltip placement="bottom" hidden={coins <= 0}>
               <MDBBtn hidden={coins <= 0} href="/vault" outline style={{ height: "3.5em" }}>
                 <img src={feelsGood} style={{ height: "2em" }}></img>
-                {numeral(coins).format("O a")}
+                {numeral(coins).format("($ 0.00 a)")}
               </MDBBtn>
               <span>{coins}</span>
             </MDBTooltip>
