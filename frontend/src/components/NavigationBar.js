@@ -55,8 +55,8 @@ export function NavigationBar(props) {
           </Nav.Item>
 
           <Nav.Item>
-            <MDBTooltip placement="bottom">
-              <MDBBtn href="/vault" outline style={{ height: "3.5em" }}>
+            <MDBTooltip placement="bottom" hidden={coins <= 0}>
+              <MDBBtn hidden={coins <= 0} href="/vault" outline style={{ height: "3.5em" }}>
                 <img src={feelsGood} style={{ height: "2em" }}></img>
                 {numeral(coins).format("O a")}
               </MDBBtn>

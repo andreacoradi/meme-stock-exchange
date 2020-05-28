@@ -31,7 +31,7 @@ export function Signup(props) {
   }
 
   return (
-    <div className='Login'>
+    <div className='Login mt-5'>
       <form onSubmit={handleSubmit}>
         <FormGroup controlId='username'>
           <FormLabel>Username</FormLabel>
