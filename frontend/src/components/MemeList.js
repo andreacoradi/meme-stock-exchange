@@ -13,7 +13,7 @@ export function MemeList(props) {
   const [memesArray, setMemesArray] = useState([])
   // const [lastItem, setlastItem] = useState(null)
 
-  let history = useHistory();
+  let history = useHistory()
 
   // const observer = useRef(
   //   new IntersectionObserver((entries) => {
@@ -22,14 +22,13 @@ export function MemeList(props) {
   //   })
   // )
 
-
   const observer = useRef()
 
-  const ultimoMeme = useCallback(node => {
-    if(observer.current) observer.current.disconnect()
-    observer.current = new IntersectionObserver(entries => {
+  const ultimoMeme = useCallback((node) => {
+    if (observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver((entries) => {
       //console.log(entries);
-      if(entries[0].isIntersecting) {
+      if (entries[0].isIntersecting) {
         setPageNumber(pageNumber + 1)
         //console.log("VISIBLE", pageNumber)
       }
@@ -56,23 +55,25 @@ export function MemeList(props) {
   useEffect(() => {
     async function fetchData() {
       console.log(`Filling ${props.count} memes, we are at page ${pageNumber}`)
-      const newResults = await Fetcher(props.requestType, props.count, pageNumber)
+      const newResults = await Fetcher(
+        props.requestType,
+        props.count,
+        pageNumber
+      )
       if (newResults === undefined || newResults.length === 0) {
         console.log("No vez, logga", memesArray.length)
         // localStorage.clear
-        history.push('/login')
+        history.push("/login")
       }
       setMemesArray(memesArray.concat(newResults))
     }
     fetchData()
   }, [pageNumber])
 
-  
-
   return (
     <div>
       {memesArray.map((meme, index) => {
-        if(!meme.url) return <Redirect to="/login" />
+        if (!meme.url) return <Redirect to="/login" />
 
         if (meme.url.endsWith(".gifv")) {
           meme.url = meme.url.replace(".gifv", ".mp4")

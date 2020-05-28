@@ -60,15 +60,7 @@ const fetchCoinsAmount = async () => {
     headers: {
       authorization: "Bearer " + userToken,
     },
-  })
-    .then((response) => {
-      // console.log(response)
-      return response.json()
-    })
-    .then((data) => {
-      // console.log(data)
-      return data.coins
-    })
+  }).then((response) => response.json())
 }
 
 export async function Fetcher(type, count, pageNumber) {

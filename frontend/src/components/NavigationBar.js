@@ -1,11 +1,17 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 // import { Link } from "react-router-dom"
 import { Nav, Navbar } from "react-bootstrap"
 import Auth from "./auth/Auth"
 import styled from "styled-components"
 import logo from "../assets/profile.png"
+import feelsGood from "../assets/feelsgoodmanCoin.png"
+import { Fetcher } from "./Fetcher"
 import { MDBBtn } from "mdbreact"
-import { useStoreState } from "easy-peasy"
+import numeral from "numeral"
+import { MDBTooltip } from "mdbreact"
+// import { useHistory } from "react-router-dom"
+// import { MDBBtn } from "mdbreact"
+// import { useStoreState } from "easy-peasy"
 
 const Styles = styled.div`
   .profile {
@@ -24,17 +30,39 @@ const Styles = styled.div`
 
 export function NavigationBar(props) {
   const username = localStorage.getItem("username")
+  const [coins, setCoins] = useState(0)
+
+  useEffect(() => {
+    const getCoins = async () => {
+      const fetchedCoins = await Fetcher("coins")
+      if (fetchedCoins[0]) {
+        setCoins(fetchedCoins[0].coins)
+      }
+    }
+
+    if (coins == 0) {
+      getCoins()
+    }
+  }, [])
 
   return (
     <div>
       <Styles>
         <Navbar expand="true" bg="dark" variant="dark">
-          {/* <Navbar.Brand href="/">MemExchange</Navbar.Brand> */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Nav.Item>
             <Navbar.Brand href="">MemeExchange</Navbar.Brand>
           </Nav.Item>
+
           <Nav.Item>
+            <MDBTooltip placement="bottom">
+              <MDBBtn href="/vault" outline style={{ height: "3.5em" }}>
+                <img src={feelsGood} style={{ height: "2em" }}></img>
+                {numeral(coins).format("O a")}
+              </MDBBtn>
+              <span>{coins}</span>
+            </MDBTooltip>
+
             <a href="/login">
               <img className="profile" src={logo} alt="" />
             </a>

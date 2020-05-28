@@ -67,13 +67,12 @@ export class Materialcard extends Component {
       )
     }
 
+    // Buttons
     let sellBtn
-
+    let actionsBtn
     let scoreBtn = (
       <MDBBtn className="z-depth-0 bg-success">{this.props.meme.score}$</MDBBtn>
     )
-
-    let actionsBtn
 
     if (this.props.sell) {
       sellBtn = (
@@ -103,13 +102,10 @@ export class Materialcard extends Component {
           parseInt(this.props.meme.coin_investiti)) /
         100
       let color = "bg-success"
-      if (increment === 0) {
-        color = "bg-warning"
-      } else if (increment < 0) {
-        color = "bg-danger"
-      }
-      scoreBtn = <MDBBtn className={color}>{increment}%</MDBBtn>
+      if (increment === 0) color = "bg-warning"
+      else if (increment < 0) color = "bg-danger"
 
+      scoreBtn = <MDBBtn className={color}>{increment}%</MDBBtn>
       actionsBtn = (
         <MDBBtn className="bg-info">{this.props.meme.quantita} azioni</MDBBtn>
       )
@@ -131,11 +127,11 @@ export class Materialcard extends Component {
         <MDBCard className="mx-auto mb-5 text-center" style={{ width: "65%" }}>
           <MDBCardHeader>
             <div className="d-flex justify-content-between">
-              <div className="d-flex align-items-left">
-                {scoreBtn}
-              </div>
+              <div className="d-flex align-items-left">{scoreBtn}</div>
               <div className="d-flex align-items-center">
-                {this.props.meme.title.substring(0, 24) + "..."}
+                {this.props.meme.title.length < 25
+                  ? this.props.meme.title
+                  : this.props.meme.title.substring(0, 24) + "..."}
               </div>
               <div className="d-flex align-items-right">{actionsBtn}</div>
             </div>
