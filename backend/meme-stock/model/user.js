@@ -1,8 +1,7 @@
 import { database } from "../helper/database.js"
 
 export const getCoins = async (username) => {
-    const sql = 
-    `SELECT coins 
+    const sql = `SELECT coins 
     FROM user 
     WHERE username = ?`
     
@@ -10,8 +9,7 @@ export const getCoins = async (username) => {
 }
 
 export const setCoins = async (username, coins) => {
-    const sql = 
-    `UPDATE user 
+    const sql = `UPDATE user 
     SET coins = ? 
     WHERE username = ?`
 
@@ -19,8 +17,7 @@ export const setCoins = async (username, coins) => {
 }
 
 export const getUserID = async (username) => {
-    const sql = 
-    `SELECT id 
+    const sql = `SELECT id 
     FROM user 
     WHERE username = ?`
 
@@ -29,8 +26,7 @@ export const getUserID = async (username) => {
 
 export const createNewUser = async (username) => {
     console.log("CREO NUOVO USER", username);
-    sql = 
-    `INSERT INTO user (username) 
+    const sql = `INSERT INTO user (username) 
     VALUES (?)`
 
     return database.query(sql, [username])
@@ -40,8 +36,7 @@ export const getUsers = async (count) => {
     if(!count) {
         count = 100
     }
-    const sql = 
-    `SELECT username, coins 
+    const sql = `SELECT username, coins 
     FROM user 
     ORDER BY coins DESC 
     LIMIT ${count}`
@@ -50,8 +45,7 @@ export const getUsers = async (count) => {
 }
 
 export const getUser = async (username) => {
-    const sql = 
-    `SELECT username, coins 
+    const sql = `SELECT username, coins 
     FROM user 
     WHERE username = ?`
 

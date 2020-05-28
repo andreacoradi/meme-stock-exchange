@@ -60,10 +60,13 @@ export function MemeList(props) {
         props.count,
         pageNumber
       )
-      if (newResults === undefined || newResults.length === 0) {
+      // console.log(newResults.length);
+      if (newResults === undefined) {
         console.log("No vez, logga", memesArray.length)
         // localStorage.clear
         history.push("/login")
+      } else if (newResults.length === 0) {
+        // <h3>Vai su market a comprare qualche meme ;)</h3>
       }
       setMemesArray(memesArray.concat(newResults))
     }

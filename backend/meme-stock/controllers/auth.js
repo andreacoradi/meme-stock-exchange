@@ -1,6 +1,6 @@
 import fetch from "node-fetch"
 
-import { getUserID } from "../model/user.js"
+import { getUserID, createNewUser } from "../model/user.js"
 
 export const AUTH_URL = "https://auth-go.rover.acoradi.xyz/api/v1"
 
