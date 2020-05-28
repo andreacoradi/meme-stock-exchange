@@ -23,9 +23,13 @@ export function Signup(props) {
       () => {
         props.history.push('/market')
       },
-      () => {
+      (message) => {
         console.log('Wrong credentials')
-        alert('Credenziali errate, prego riprovare')
+        
+        if(message)
+          alert(message)
+        else
+          alert('Credenziali errate, prego riprovare')
       }
     )
   }

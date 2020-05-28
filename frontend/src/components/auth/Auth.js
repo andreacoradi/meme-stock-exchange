@@ -49,7 +49,7 @@ class Auth {
           console.log('All my niggas use fetchfetchgo')
           this.login(credentials, cb, somethingWrong)
         } else {
-          somethingWrong()
+          somethingWrong(body.message.charAt(0).toUpperCase() + body.message.slice(1))
         }
       })
   }

@@ -22,9 +22,13 @@ export function Login(props) {
         window.location.reload(false)
         // this fixes the default username being stuck once logged in
       },
-      () => {
+      (message) => {
         console.log('Wrong credentials')
-        alert('Credenziali errate, prego riprovare')
+
+        if(message)
+          alert(message)
+        else
+          alert('Credenziali errate, prego riprovare')
       }
     )
   }
