@@ -40,7 +40,7 @@ export function NavigationBar(props) {
       }
     }
 
-    if (coins == 0) {
+    if (coins === 0) {
       getCoins()
     }
   }, [])

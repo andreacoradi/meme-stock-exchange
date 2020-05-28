@@ -1,0 +1,21 @@
+.card {
+    width: 65%;
+}
+
+@media only screen and (max-width: 900px) {
+    .card {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .card{
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+    .profile {
+        display: none;
+    }
+}

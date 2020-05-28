@@ -12,7 +12,9 @@ import {
   MDBModalBody,
   MDBModalHeader,
 } from "mdbreact"
+import numeral from "numeral"
 
+import "./style/MemeCard.css"
 import Exchange from "./Exchange"
 
 export class Materialcard extends Component {
@@ -105,9 +107,9 @@ export class Materialcard extends Component {
       if (increment === 0) color = "bg-warning"
       else if (increment < 0) color = "bg-danger"
 
-      scoreBtn = <MDBBtn className={color}>{increment}%</MDBBtn>
+      scoreBtn = <MDBBtn className={color}>{numeral(increment).format("Oa")}%</MDBBtn>
       actionsBtn = (
-        <MDBBtn className="bg-info">{this.props.meme.quantita} azioni</MDBBtn>
+        <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("Oa")} azioni</MDBBtn>
       )
     }
 
@@ -124,7 +126,7 @@ export class Materialcard extends Component {
           </MDBModalBody>
         </MDBModal>
 
-        <MDBCard className="mx-auto mb-5 text-center" style={{ width: "65%" }}>
+        <MDBCard className="mx-auto mb-5 text-center">
           <MDBCardHeader>
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-left">{scoreBtn}</div>

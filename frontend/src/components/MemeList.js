@@ -32,7 +32,7 @@ export function MemeList(props) {
         setPageNumber(pageNumber + 1)
         //console.log("VISIBLE", pageNumber)
       }
-    })
+    }, [])
     //console.log(node);
     if (node) observer.current.observe(node)
   })
@@ -69,6 +69,7 @@ export function MemeList(props) {
         // <h3>Vai su market a comprare qualche meme ;)</h3>
       }
       setMemesArray(memesArray.concat(newResults))
+      //setMemesArray(m => [...m, newResults])
     }
     fetchData()
   }, [pageNumber])
