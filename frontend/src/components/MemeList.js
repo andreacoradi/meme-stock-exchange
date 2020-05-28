@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react"
+import React, { useRef, useState, useEffect, useCallback } from "react"
 import { Redirect, useHistory } from "react-router-dom"
 
 import { Fetcher } from "./Fetcher"
@@ -11,31 +11,47 @@ import { Materialcard } from "../components/MaterialCard"
 export function MemeList(props) {
   const [pageNumber, setPageNumber] = useState(0)
   const [memesArray, setMemesArray] = useState([])
-  const [lastItem, setlastItem] = useState(null)
+  // const [lastItem, setlastItem] = useState(null)
 
   let history = useHistory();
 
-  const observer = useRef(
-    new IntersectionObserver((entries) => {
-      const first = entries[0]
-      if (first.isIntersecting) setPageNumber(pageNumber + 1)
-    })
-  )
+  // const observer = useRef(
+  //   new IntersectionObserver((entries) => {
+  //     const first = entries[0]
+  //     if (first.isIntersecting) setPageNumber(pageNumber + 1)
+  //   })
+  // )
 
-  useEffect(() => {
-    const currentElement = lastItem
-    const currentObserver = observer.current
 
-    if (currentElement) {
-      currentObserver.observe(currentElement)
-    }
+  const observer = useRef()
 
-    return () => {
-      if (currentElement) {
-        currentObserver.unobserve(currentElement)
+  const ultimoMeme = useCallback(node => {
+    if(observer.current) observer.current.disconnect()
+    observer.current = new IntersectionObserver(entries => {
+      //console.log(entries);
+      if(entries[0].isIntersecting) {
+        setPageNumber(pageNumber + 1)
+        //console.log("VISIBLE", pageNumber)
       }
-    }
-  }, [lastItem])
+    })
+    //console.log(node);
+    if (node) observer.current.observe(node)
+  })
+
+  // useEffect(() => {
+  //   const currentElement = lastItem
+  //   const currentObserver = observer.current
+
+  //   if (currentElement) {
+  //     currentObserver.observe(currentElement)
+  //   }
+
+  //   return () => {
+  //     if (currentElement) {
+  //       currentObserver.unobserve(currentElement)
+  //     }
+  //   }
+  // }, [lastItem])
 
   useEffect(() => {
     async function fetchData() {
@@ -51,18 +67,20 @@ export function MemeList(props) {
     fetchData()
   }, [pageNumber])
 
+  
+
   return (
     <div>
       {memesArray.map((meme, index) => {
         if(!meme.url) return <Redirect to="/login" />
+
         if (meme.url.endsWith(".gifv")) {
-          console.log("eccolo!")
           meme.url = meme.url.replace(".gifv", ".mp4")
         }
 
         if (memesArray.length === index + 1 && props.scroll) {
           return (
-            <div ref={setlastItem} key={meme.url}>
+            <div ref={ultimoMeme} key={meme.url}>
               <Materialcard
                 key={meme.url}
                 meme={meme}

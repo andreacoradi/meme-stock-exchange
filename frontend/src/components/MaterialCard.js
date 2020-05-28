@@ -21,8 +21,8 @@ export class Materialcard extends Component {
     this.state = {
       collapseID: "",
       showModal: false,
-      quantity: "",
-      showSellButton: props.action === "sell" ? true : false,
+      quantity: 0,
+      showSellButton: props.action === "sell",
     }
 
     // let sellButton : props.action == ""
@@ -47,6 +47,7 @@ export class Materialcard extends Component {
   render() {
     let media = (
       <MDBMedia
+        className="mx-auto align-items-center"
         object
         src={this.props.meme.url}
         onClick={this.toggleModal(this.state.showModal)}
@@ -107,7 +108,7 @@ export class Materialcard extends Component {
       } else if (increment < 0) {
         color = "bg-danger"
       }
-      scoreBtn = <MDBBtn className="bg-success">{increment}%</MDBBtn>
+      scoreBtn = <MDBBtn className={color}>{increment}%</MDBBtn>
 
       actionsBtn = (
         <MDBBtn className="bg-info">{this.props.meme.quantita} azioni</MDBBtn>
@@ -130,7 +131,9 @@ export class Materialcard extends Component {
         <MDBCard className="mx-auto mb-5 text-center" style={{ width: "65%" }}>
           <MDBCardHeader>
             <div className="d-flex justify-content-between">
-              {scoreBtn}
+              <div className="d-flex align-items-left">
+                {scoreBtn}
+              </div>
               <div className="d-flex align-items-center">
                 {this.props.meme.title.substring(0, 24) + "..."}
               </div>
