@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react"
-import { Redirect } from "react-router-dom"
+import { Redirect, useHistory } from "react-router-dom"
+
 import { Fetcher } from "./Fetcher"
 import { Materialcard } from "../components/MaterialCard"
 // import memesJSON from "../assets/memes.json"
@@ -12,25 +13,14 @@ export function MemeList(props) {
   const [memesArray, setMemesArray] = useState([])
   const [lastItem, setlastItem] = useState(null)
 
+  let history = useHistory();
+
   const observer = useRef(
     new IntersectionObserver((entries) => {
       const first = entries[0]
       if (first.isIntersecting) setPageNumber(pageNumber + 1)
     })
   )
-
-  const fillMemes = async () => {
-    console.log(`Filling ${props.count} memes, we are at page ${pageNumber}`)
-    const newResults = await Fetcher(props.requestType, props.count, pageNumber)
-    setMemesArray(memesArray.concat(newResults))
-    // setMemesArray([...memesArray, ...newResults])
-    if (memesArray.length === 0) {
-      console.log("No vez, logga", memesArray.length)
-      // localStorage.clear
-
-      return <Redirect to="/login" />
-    }
-  }
 
   useEffect(() => {
     const currentElement = lastItem
@@ -48,12 +38,23 @@ export function MemeList(props) {
   }, [lastItem])
 
   useEffect(() => {
-    fillMemes()
+    async function fetchData() {
+      console.log(`Filling ${props.count} memes, we are at page ${pageNumber}`)
+      const newResults = await Fetcher(props.requestType, props.count, pageNumber)
+      if (newResults === undefined || newResults.length === 0) {
+        console.log("No vez, logga", memesArray.length)
+        // localStorage.clear
+        history.push('/login')
+      }
+      setMemesArray(memesArray.concat(newResults))
+    }
+    fetchData()
   }, [pageNumber])
 
   return (
     <div>
       {memesArray.map((meme, index) => {
+        if(!meme.url) return <Redirect to="/login" />
         if (meme.url.endsWith(".gifv")) {
           console.log("eccolo!")
           meme.url = meme.url.replace(".gifv", ".mp4")
