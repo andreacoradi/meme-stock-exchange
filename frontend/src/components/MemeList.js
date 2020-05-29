@@ -81,7 +81,7 @@ export function MemeList(props) {
             />
           )
       })}
-      <ScrollTop />;
+      <ScrollTop />
     </div>
   )
 }

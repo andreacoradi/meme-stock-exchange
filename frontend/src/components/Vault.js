@@ -20,7 +20,7 @@ export const Vault = () => {
           sell={true}
         />
       </div>
-      <ScrollTop />;
+      <ScrollTop />
     </div>
   )
 }
