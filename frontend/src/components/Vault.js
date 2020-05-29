@@ -1,4 +1,5 @@
 import React from "react"
+import ScrollTop from 'react-scrolltop-button';
 // import MaterialCard from "./MaterialCard"
 import { MemeList } from "./MemeList"
 import { Searchbar } from "./Searchbar"
@@ -19,6 +20,7 @@ export const Vault = () => {
           sell={true}
         />
       </div>
+      <ScrollTop />;
     </div>
   )
 }
