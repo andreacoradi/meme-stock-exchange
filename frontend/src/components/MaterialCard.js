@@ -11,6 +11,7 @@ import {
   MDBModal,
   MDBModalBody,
   MDBModalHeader,
+  MDBTooltip,
 } from "mdbreact"
 import numeral from "numeral"
 
@@ -73,7 +74,7 @@ export class Materialcard extends Component {
     let sellBtn
     let actionsBtn
     let scoreBtn = (
-      <MDBBtn className="z-depth-0 bg-success">{this.props.meme.score}$</MDBBtn>
+      <MDBBtn className="z-depth-0 bg-success">{numeral(this.props.meme.score).format("($ 0a)")}</MDBBtn>
     )
 
     if (this.props.sell) {
@@ -99,17 +100,18 @@ export class Materialcard extends Component {
         </MDBBtn>
       )
 
-      const increment =
-        (parseInt(this.props.meme.score) * parseInt(this.props.meme.quantita) -
-          parseInt(this.props.meme.coin_investiti)) /
-        100
+      const totalValue = parseInt(this.props.meme.score) * parseInt(this.props.meme.quantita)
+      const percent = (totalValue - this.props.meme.coin_investiti) / 100
       let color = "bg-success"
-      if (increment === 0) color = "bg-warning"
-      else if (increment < 0) color = "bg-danger"
+      if (totalValue === this.props.meme.coin_investiti) color = "bg-warning"
+      else if (totalValue < this.props.meme.coin_investiti) color = "bg-danger"
 
-      scoreBtn = <MDBBtn className={color}>{numeral(increment).format("0.00a")}%</MDBBtn>
+      scoreBtn = <MDBBtn className={color}>{numeral(totalValue).format("($ 0a)")} ({(percent > 0 ? "+" : "-")}{numeral(percent).format("0.0a")}%)</MDBBtn>
       actionsBtn = (
-        <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("0a")} azioni</MDBBtn>
+        <MDBTooltip placement="bottom">
+          <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("0a")} azioni</MDBBtn>
+          <span>{this.props.meme.quantita}</span>
+        </MDBTooltip>
       )
     }
 
@@ -130,8 +132,8 @@ export class Materialcard extends Component {
           <MDBCardHeader>
             <div className="d-flex justify-content-between">
               <div className="d-flex align-items-left">
-                {scoreBtn}           
-                </div>
+                {scoreBtn}
+              </div>
               <div className="d-flex align-items-center">
                 {this.props.meme.title.length < 25
                   ? this.props.meme.title
