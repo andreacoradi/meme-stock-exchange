@@ -101,7 +101,8 @@ export class Materialcard extends Component {
       )
 
       const totalValue = parseInt(this.props.meme.score) * parseInt(this.props.meme.quantita)
-      const percent = (totalValue - this.props.meme.coin_investiti) / 100
+      const initialValue = this.props.meme.coin_investiti / this.props.meme.quantita
+      const percent = ((this.props.meme.score - (initialValue)) / initialValue) * 100 // (totalValue - this.props.meme.coin_investiti) / 100
       let color = "bg-success"
       if (totalValue === this.props.meme.coin_investiti) color = "bg-warning"
       else if (totalValue < this.props.meme.coin_investiti) color = "bg-danger"
