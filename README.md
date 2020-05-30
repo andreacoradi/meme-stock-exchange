@@ -10,18 +10,18 @@
 
 2. Descrizione generale
 
-   1. Prospettive del prodott
-   2. Funzionalità del prodott
-   3. Caratteristiche utent
-   4. Vincoli general
+   1. Prospettive del prodotto
+   2. Funzionalità del prodotto
+   3. Caratteristiche utente
+   4. Vincoli generali
    5. Assunzioni e dipendenze
 
 3. Requisiti specifici
 
-   1. Descrizione generale del sistem
-   2. Requisiti aut
-   3. Requisiti backen
-   4. Requisiti fronten
+   1. Descrizione generale del sistema
+   2. Requisiti auth
+   3. Requisiti backend
+   4. Requisiti frontend
    5. Interfaccia utente
 
 ## Introduzione
