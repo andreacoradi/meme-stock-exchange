@@ -40,7 +40,7 @@ export function App() {
                   <Route path="/signup" component={Signup} />
                   <ProtectedRoute path="/vault" component={Vault} />
                   <ProtectedRoute path="/market" component={Market} />
-                  <ProtectedRoute path="/Leaderboard" component={Leaderboard} />
+                  {/* <ProtectedRoute path="/Leaderboard" component={Leaderboard} /> */}
                   <Route component={NoMatch} />
                 </Switch>
               </Layout>

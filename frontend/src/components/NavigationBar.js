@@ -72,7 +72,7 @@ export function NavigationBar(props) {
               <Nav.Link>{username ? `Hi ${username}` : "Hi user"}</Nav.Link>
               <Nav.Link href="/vault">My Memes</Nav.Link>
               <Nav.Link href="/market">Market</Nav.Link>
-              <Nav.Link href="/leaderboard">Leaderboard</Nav.Link>
+              {/* <Nav.Link href="/leaderboard">Leaderboard</Nav.Link> */}
               <Nav.Link
                 href="/"
                 onClick={() => {
