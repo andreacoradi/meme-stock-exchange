@@ -68,6 +68,8 @@ export const handlerExchangeMeme = async (req, res) => {
         }
 
         valoreMeme = valoreMeme[0].score
+        if(valoreMeme <= 0)
+            throw new Error("Cannot buy this meme")
 
         const userCoins = (await getCoins(username))[0].coins
         
