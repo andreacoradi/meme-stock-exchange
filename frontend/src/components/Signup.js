@@ -11,7 +11,10 @@ export function Signup(props) {
 
   function validateForm() {
     return (
-      username.length > 0 && password.length > 0 && password === confirmPassword
+      username.length > 0 &&
+      username.length <= 20 &&
+      password.length > 0 &&
+      password === confirmPassword
     )
   }
 
@@ -25,11 +28,9 @@ export function Signup(props) {
       },
       (message) => {
         console.log('Wrong credentials')
-        
-        if(message)
-          alert(message)
-        else
-          alert('Credenziali errate, prego riprovare')
+
+        if (message) alert(message)
+        else alert('Credenziali errate, prego riprovare')
       }
     )
   }
