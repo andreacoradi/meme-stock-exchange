@@ -172,6 +172,7 @@ export class Materialcard extends Component {
                   disabled={
                     this.state.quantity <= 0 ||
                     this.state.quantity === undefined
+                    || this.props.meme.score <= 0
                   }
                   onClick={() => {
                     Exchange.transaction(
