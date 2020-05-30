@@ -28,7 +28,7 @@
 
 ### 1. Propositi
 
-Il proposito di questo documento è quello di specificare i requisiti del sistema "MemeExchange™️" per facilitarne la realizzazione.
+Il proposito di questo documento è quello di specificare i requisiti del sistema "MemeExchange" per facilitarne la realizzazione.
 Questo documento è stato scritto seguendo le indicazioni contenute nel documento “IEEE Recommended Practice for Software Requirements Specifications” avente riferimento IEEEStd 830-1993 (Revision of IEEE Std 830-1984).
 
 ### 2. Obiettivi
@@ -51,11 +51,11 @@ Si desidera realizzare un'app che simuli una sorta di mercato azionario basato s
 
 ### 1. Prospettive del prodotto
 
-Il sistema informatico "MemeExchange™️" è creato per offrire un' esperienza videoludica che colleghi l'attività di navigazione su un servizio come reddit con la prospettiva di un simulatore del mercato azionario. Il tutto tramite un' interfaccia utente semplice e piacevole alla portata di tutti gli utenti.
+Il sistema informatico "MemeExchange" è creato per offrire un' esperienza videoludica che colleghi l'attività di navigazione su un servizio come reddit con la prospettiva di un simulatore del mercato azionario. Il tutto tramite un' interfaccia utente semplice e piacevole alla portata di tutti gli utenti.
 
 ### 2. Funzionalità del prodotto
 
-Il sistema informatico MemeExchange™️ deve:
+Il sistema informatico MemeExchange deve:
 
 - permettere la creazione di un account da parte del l'user;
 - permettere l'accesso al servizio dell'applicazione;
