@@ -202,7 +202,7 @@ const deleteOldMemes = async () => {
 var aggiungiMeme = new CronJob('*/30 * * * *', addMemes, null, true, "Europe/Berlin")
 
 // Ogni ora
-var rimuoviMeme = new CronJob('0 * * * *', deleteOldMemes, null, true, "Europe/Berlin")
+var rimuoviMeme = new CronJob('*/30 * * * *', deleteOldMemes, null, true, "Europe/Berlin")
 
 // Ogni 15 minuti
-var aggiornaMeme = new CronJob('*/15 * * * *', updateInvestments, null, true, "Europe/Berlin")
+var aggiornaMeme = new CronJob('*/5 * * * *', updateInvestments, null, true, "Europe/Berlin")
