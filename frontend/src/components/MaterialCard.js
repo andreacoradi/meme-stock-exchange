@@ -107,7 +107,7 @@ export class Materialcard extends Component {
       if (totalValue === this.props.meme.coin_investiti) color = "bg-warning"
       else if (totalValue < this.props.meme.coin_investiti) color = "bg-danger"
 
-      scoreBtn = <MDBBtn className={color}>{numeral(totalValue).format("($ 0a)")} ({(percent > 0 ? "+" : "-")}{numeral(percent).format("0.0a")}%)</MDBBtn>
+      scoreBtn = <MDBBtn className={color}>{numeral(totalValue).format("($ 0a)")} ({(percent > 0 ? "+" : "")}{numeral(percent).format("0.0a")}%)</MDBBtn>
       actionsBtn = (
         <MDBTooltip placement="bottom">
           <MDBBtn className="bg-info">{numeral(this.props.meme.quantita).format("0a")} azioni</MDBBtn>
